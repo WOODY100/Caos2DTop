@@ -7,6 +7,8 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     public float moveSpeed = 5f;
     private Vector2 lastMoveDirection = Vector2.down;
+    public bool canMove = true;
+
 
     [Header("Direction")]
     public Direction currentDirection = Direction.Down;
@@ -49,6 +51,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!canMove) return;
         if (IsAttacking) return;
         rb.MovePosition(rb.position + moveInput * moveSpeed * Time.fixedDeltaTime);
     }
