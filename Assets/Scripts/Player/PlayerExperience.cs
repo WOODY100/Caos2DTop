@@ -6,6 +6,7 @@ public class PlayerExperience : MonoBehaviour
 {
     [Header("Level")]
     public int level = 1;
+    [SerializeField] private LevelUpUI levelUpUI;
 
     [Header("Experience")]
     public int currentExp = 0;
@@ -39,33 +40,35 @@ public class PlayerExperience : MonoBehaviour
     private void LevelUp()
     {
         currentExp -= expToNextLevel;
+
         level++;
 
         expToNextLevel = Mathf.RoundToInt(expToNextLevel * expMultiplier);
 
-        ApplyLevelStats();
+        int index = level - 2;
+
+        if (index >= 0 && index < levelStats.Count)
+        {
+            LevelStats gained = levelStats[index];
+            ApplyLevelStats(gained);
+
+            levelUpUI?.Show(gained, level);
+        }
+        Debug.Log($"LEVEL {level} → usando LevelStats[{index}]");
 
         OnLevelUp?.Invoke();
         OnExpChanged?.Invoke();
     }
 
-    private void ApplyLevelStats()
+
+    private void ApplyLevelStats(LevelStats growth)
     {
-        int index = level - 2; // nivel 2 = índice 0
-
-        if (index < 0 || index >= levelStats.Count)
-        {
-            Debug.LogWarning("⚠ No hay stats definidos para nivel " + level);
-            return;
-        }
-
-        LevelStats growth = levelStats[index];
-
         stats.baseHealth += growth.bonusHealth;
         stats.baseAttack += growth.bonusAttack;
         stats.baseDefense += growth.bonusDefense;
         stats.baseSpeed += growth.bonusSpeed;
 
         stats.RecalculateStats();
+        stats.currentHealth = stats.maxHealth;
     }
 }

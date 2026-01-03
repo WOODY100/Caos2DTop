@@ -2,13 +2,19 @@ using UnityEngine;
 
 public class EnemyAttackHitbox : MonoBehaviour
 {
-    public int damage = 1;
+    private EnemyAttack enemyAttack;
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void Awake()
     {
-        if (other.CompareTag("Player"))
-        {
-            //other.GetComponent<PlayerHealth>()?.TakeDamage(damage);
-        }
+        enemyAttack = GetComponentInParent<EnemyAttack>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        int damage = enemyAttack.GetDamage();
+
+        other.GetComponent<PlayerStats>()?.TakeDamage(damage);
     }
 }

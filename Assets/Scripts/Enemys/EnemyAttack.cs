@@ -5,23 +5,32 @@ public class EnemyAttack : MonoBehaviour
     [Header("Attack")]
     public float attackCooldown = 1.2f;
 
-    [Header("Hitbox")]
-    public GameObject hitbox;
-    public Vector2 offsetUp;
-    public Vector2 offsetDown;
-    public Vector2 offsetLeft;
-    public Vector2 offsetRight;
+    [Header("Hitboxes")]
+    public GameObject hitboxUp;
+    public GameObject hitboxDown;
+    public GameObject hitboxLeft;
+    public GameObject hitboxRight;
 
     private EnemyAnimator enemyAnimator;
     private EnemyController enemyController;
+    private EnemyLevel enemyLevel;
 
     private bool canAttack = true;
     private bool isAttacking;
+    private GameObject currentHitbox;
 
     void Awake()
     {
         enemyAnimator = GetComponent<EnemyAnimator>();
         enemyController = GetComponent<EnemyController>();
+        enemyLevel = GetComponent<EnemyLevel>();
+
+        DisableAllHitboxes();
+    }
+
+    public int GetDamage()
+    {
+        return enemyLevel != null ? enemyLevel.attack : 1;
     }
 
     public void TryAttack()
@@ -32,6 +41,7 @@ public class EnemyAttack : MonoBehaviour
         canAttack = false;
 
         enemyController.Stop();
+        SelectHitbox();
         enemyAnimator.PlayAttack();
 
         Invoke(nameof(ResetCooldown), attackCooldown);
@@ -42,32 +52,43 @@ public class EnemyAttack : MonoBehaviour
         canAttack = true;
     }
 
+    void SelectHitbox()
+    {
+        DisableAllHitboxes();
+
+        Vector2 dir = enemyController.GetMoveDirection();
+
+        if (dir == Vector2.zero)
+            dir = Vector2.down; // fallback
+
+        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+        {
+            currentHitbox = dir.x > 0 ? hitboxRight : hitboxLeft;
+        }
+        else
+        {
+            currentHitbox = dir.y > 0 ? hitboxUp : hitboxDown;
+        }
+    }
+
     // 🎞️ Animation Events
     public void EnableHitbox()
     {
-        SetHitboxDirection();
-        hitbox.SetActive(true);
+        currentHitbox?.SetActive(true);
     }
 
     public void DisableHitbox()
     {
-        hitbox.SetActive(false);
+        currentHitbox?.SetActive(false);
+        DisableAllHitboxes();
         isAttacking = false;
     }
 
-    void SetHitboxDirection()
+    void DisableAllHitboxes()
     {
-        Vector2 dir = enemyController.GetMoveDirection();
-
-        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
-        {
-            hitbox.transform.localPosition =
-                dir.x > 0 ? offsetRight : offsetLeft;
-        }
-        else
-        {
-            hitbox.transform.localPosition =
-                dir.y > 0 ? offsetUp : offsetDown;
-        }
+        hitboxUp.SetActive(false);
+        hitboxDown.SetActive(false);
+        hitboxLeft.SetActive(false);
+        hitboxRight.SetActive(false);
     }
 }

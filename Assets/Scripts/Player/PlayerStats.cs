@@ -21,6 +21,11 @@ public class PlayerStats : MonoBehaviour
     [Header("Runtime")]
     public int currentHealth;
 
+    [Header("Critical Stats")]
+    public float critChance = 0.15f;      // 15%
+    public float critMultiplier = 1.5f;   // x1.5 daño
+
+
     private void Awake()
     {
         RecalculateStats();
@@ -50,17 +55,32 @@ public class PlayerStats : MonoBehaviour
             speed += item.bonusSpeed;
         }
 
-        // Ajusta la vida actual si cambia el máximo
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        // 🧠 Ajuste inteligente de vida actual
+        if (oldMaxHealth > 0)
+        {
+            float percent = (float)currentHealth / oldMaxHealth;
+            currentHealth = Mathf.RoundToInt(maxHealth * percent);
+        }
+        else
+        {
+            currentHealth = maxHealth;
+        }
 
-        // 🔔 Notificar a la UI
+        // 🔔 NOTIFICAR CAMBIOS
         OnStatsChanged?.Invoke();
+        OnHealthChanged?.Invoke(); // ⬅️ ESTA LÍNEA ES LA CLAVE
     }
 
     public void TakeDamage(int amount)
     {
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        FloatingTextManager.Instance.ShowDamage(
+        amount,
+        transform.position + Vector3.up
+        );
+
         OnHealthChanged?.Invoke();
     }
 

@@ -1,14 +1,34 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class SwordHitbox : MonoBehaviour
 {
-    public int damage = 1;
+    private PlayerStats stats;
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void Awake()
     {
-        if (other.CompareTag("Enemy"))
+        stats = FindAnyObjectByType<PlayerStats>();
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Enemy")) return;
+
+        EnemyHealth enemy = other.GetComponent<EnemyHealth>();
+        if (enemy == null) return;
+
+        int finalDamage = stats.attack;
+        bool isCritical = RollCritical();
+
+        if (isCritical)
         {
-            other.GetComponent<EnemyHealth>()?.TakeDamage(damage);
+            finalDamage = Mathf.RoundToInt(finalDamage * stats.critMultiplier);
         }
+
+        enemy.TakeDamage(finalDamage, isCritical);
+    }
+
+    private bool RollCritical()
+    {
+        return Random.value < stats.critChance;
     }
 }
