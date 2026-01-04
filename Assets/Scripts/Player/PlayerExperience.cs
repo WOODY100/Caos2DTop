@@ -6,7 +6,6 @@ public class PlayerExperience : MonoBehaviour
 {
     [Header("Level")]
     public int level = 1;
-    [SerializeField] private LevelUpUI levelUpUI;
 
     [Header("Experience")]
     public int currentExp = 0;
@@ -15,13 +14,13 @@ public class PlayerExperience : MonoBehaviour
     [Header("Growth")]
     public float expMultiplier = 1.5f;
 
-    [Header("Level Stat Growth")]
-    public List<LevelStats> levelStats = new List<LevelStats>();
-
     public event Action OnExpChanged;
-    public event Action OnLevelUp;
+    public event Action<LevelStats, int> OnLevelUp;
 
     private PlayerStats stats;
+
+    // 🔹 Stats pendientes de aplicar
+    private LevelStats pendingStats;
 
     private void Awake()
     {
@@ -40,35 +39,33 @@ public class PlayerExperience : MonoBehaviour
     private void LevelUp()
     {
         currentExp -= expToNextLevel;
-
         level++;
 
         expToNextLevel = Mathf.RoundToInt(expToNextLevel * expMultiplier);
 
         int index = level - 2;
 
-        if (index >= 0 && index < levelStats.Count)
-        {
-            LevelStats gained = levelStats[index];
-            ApplyLevelStats(gained);
+        // 🔔 Avisar al sistema de elecciones
+        OnLevelUp?.Invoke(pendingStats, level);
 
-            levelUpUI?.Show(gained, level);
-        }
-        Debug.Log($"LEVEL {level} → usando LevelStats[{index}]");
+        Debug.Log($"LEVEL {level} → esperando elección");
 
-        OnLevelUp?.Invoke();
         OnExpChanged?.Invoke();
     }
 
-
-    private void ApplyLevelStats(LevelStats growth)
+    // 🔹 ESTE método se llamará cuando el jugador elija
+    public void ApplyChosenStats(LevelStats chosenStats)
     {
-        stats.baseHealth += growth.bonusHealth;
-        stats.baseAttack += growth.bonusAttack;
-        stats.baseDefense += growth.bonusDefense;
-        stats.baseSpeed += growth.bonusSpeed;
+        if (chosenStats == null) return;
+
+        stats.baseHealth += chosenStats.bonusHealth;
+        stats.baseAttack += chosenStats.bonusAttack;
+        stats.baseDefense += chosenStats.bonusDefense;
+        stats.baseSpeed += chosenStats.bonusSpeed;
 
         stats.RecalculateStats();
         stats.currentHealth = stats.maxHealth;
+
+        pendingStats = null;
     }
 }

@@ -589,7 +589,7 @@ MonoBehaviour:
   levelOffset: -1
   baseHealth: 20
   baseAttack: 5
-  baseExp: 10
+  baseExp: 100
   healthPerLevel: 1.2
   attackPerLevel: 1.1
   expPerLevel: 1.3
@@ -648,11 +648,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe5e770f45fef1409eddb52fb706292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  player: {fileID: 0}
   detectionDistance: 4
   chaseDistance: 7
   attackDistance: 1.1
+  idleTime: 4
   patrolRadius: 3
-  patrolWaitTime: 1.5
+  patrolWaitTime: 4
 --- !u!1 &4913378468304750030
 GameObject:
   m_ObjectHideFlags: 0

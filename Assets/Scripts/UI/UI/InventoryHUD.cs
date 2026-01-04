@@ -29,13 +29,13 @@ public class InventoryHUD : MonoBehaviour
     {
         InventoryManager.OnInventoryChanged += RefreshDelayed;
         Refresh();
-        Time.timeScale = 0f;
+        GamePauseManager.Instance.RequestPause(this);
     }
 
     private void OnDisable()
     {
         InventoryManager.OnInventoryChanged -= RefreshDelayed;
-        Time.timeScale = 1f;
+        GamePauseManager.Instance.ReleasePause(this);
     }
 
     public void Toggle()

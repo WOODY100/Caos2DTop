@@ -20,7 +20,7 @@ public class ExperienceBarUI : MonoBehaviour
         playerExp = FindFirstObjectByType<PlayerExperience>();
 
         playerExp.OnExpChanged += UpdateUI;
-        playerExp.OnLevelUp += UpdateUI;
+        playerExp.OnLevelUp += OnLevelUp;
 
         UpdateUI();
     }
@@ -34,10 +34,14 @@ public class ExperienceBarUI : MonoBehaviour
         );
     }
 
+    private void OnLevelUp(LevelStats stats, int level)
+    {
+        UpdateUI();
+    }
+
     private void UpdateUI()
     {
         targetFill = (float)playerExp.currentExp / playerExp.expToNextLevel;
-
         levelText.text = "Lv " + playerExp.level;
         expText.text = $"{playerExp.currentExp} / {playerExp.expToNextLevel}";
     }

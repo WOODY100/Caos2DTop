@@ -1,53 +1,58 @@
 ﻿using UnityEngine;
 using TMPro;
+using System;
+using System.Collections.Generic;
 
 public class LevelUpUI : MonoBehaviour
 {
     [Header("UI")]
-    public TMP_Text levelText;
-    public TMP_Text statsText;
+    public GameObject panel;
+    public TMP_Text titleText;
+    public Transform choicesParent;
+    public LevelUpOptionButton optionButtonPrefab;
 
-    private PlayerExperience playerExp;
+    private Action<LevelUpOption> onOptionSelected;
 
     private void Awake()
     {
-        playerExp = FindFirstObjectByType<PlayerExperience>();
-        gameObject.SetActive(false);
+        panel.SetActive(false);
     }
 
-    private void OnEnable()
+    public void Show(List<LevelUpOption> options, Action<LevelUpOption> callback)
     {
-        Time.timeScale = 0f;
-    }
+        onOptionSelected = callback;
 
-    private void OnDisable()
-    {
-        Time.timeScale = 1f;
-    }
+        panel.SetActive(true);
+        GamePauseManager.Instance.RequestPause(this);
 
-    public void Show(LevelStats gainedStats, int newLevel)
-    {
-        levelText.text = $"Nivel {newLevel}";
+        ClearButtons();
 
-        if (gainedStats != null)
+        foreach (var opt in options)
         {
-            statsText.text =
-                $"+ Vida: {gainedStats.bonusHealth}\n" +
-                $"+ Ataque: {gainedStats.bonusAttack}\n" +
-                $"+ Defensa: {gainedStats.bonusDefense}\n" +
-                $"+ Velocidad: {gainedStats.bonusSpeed}";
-        }
-        else
-        {
-            statsText.text = "Sin mejoras en este nivel";
-        }
+            LevelUpOptionButton btn =
+                Instantiate(optionButtonPrefab, choicesParent);
 
-        gameObject.SetActive(true);
+            btn.Setup(opt, OnOptionSelected);
+        }
     }
 
-
-    public void Close()
+    private void OnOptionSelected(LevelUpOption option)
     {
-        gameObject.SetActive(false);
+        onOptionSelected?.Invoke(option);
+        Close();
+    }
+
+    private void ClearButtons()
+    {
+        foreach (Transform child in choicesParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    private void Close()
+    {
+        GamePauseManager.Instance.ReleasePause(this);
+        panel.SetActive(false);
     }
 }

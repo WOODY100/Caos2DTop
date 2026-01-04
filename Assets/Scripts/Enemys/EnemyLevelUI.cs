@@ -39,25 +39,29 @@ public class EnemyLevelUI : MonoBehaviour
         int diff = enemyLv - playerLv;
 
         if (diff <= -2)
-            levelText.color = lowLevelColor;      // fácil
+            levelText.color = lowLevelColor;
         else if (diff <= 1)
-            levelText.color = equalLevelColor;    // normal
+            levelText.color = equalLevelColor;
         else
-            levelText.color = highLevelColor;     // peligro
+            levelText.color = highLevelColor;
+    }
+
+    private void OnPlayerLevelUp(LevelStats stats, int level)
+    {
+        Refresh();
     }
 
     private void OnEnable()
     {
         PlayerExperience exp = FindAnyObjectByType<PlayerExperience>();
         if (exp != null)
-            exp.OnLevelUp += Refresh;
+            exp.OnLevelUp += OnPlayerLevelUp;
     }
 
     private void OnDisable()
     {
         PlayerExperience exp = FindAnyObjectByType<PlayerExperience>();
         if (exp != null)
-            exp.OnLevelUp -= Refresh;
+            exp.OnLevelUp -= OnPlayerLevelUp;
     }
-
 }

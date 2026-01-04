@@ -57,5 +57,4 @@ public class EnemyHealth : MonoBehaviour
         maxHealth = value;
         currentHealth = maxHealth;
     }
-
 }

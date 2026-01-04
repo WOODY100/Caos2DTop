@@ -912,8 +912,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fbe5e770f45fef1409eddb52fb706292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  player: {fileID: 0}
   detectionDistance: 4
   chaseDistance: 15
   attackDistance: 1.1
+  idleTime: 4
   patrolRadius: 7
   patrolWaitTime: 3

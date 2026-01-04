@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3162323145986327657}
   - component: {fileID: 2584661274439372332}
   - component: {fileID: 1933298785222810559}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SwordHitbox_Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,7 +91,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2026600205181574a90c3ac5a05b78c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordHitbox
-  damage: 1
 --- !u!1 &2649476730053206153
 GameObject:
   m_ObjectHideFlags: 0
@@ -103,7 +102,7 @@ GameObject:
   - component: {fileID: 173527590438517982}
   - component: {fileID: 1170926272033973723}
   - component: {fileID: 6312765133633848208}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SwordHitbox_Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,7 +182,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2026600205181574a90c3ac5a05b78c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordHitbox
-  damage: 1
 --- !u!1 &5936183076624203310
 GameObject:
   m_ObjectHideFlags: 0
@@ -203,7 +201,7 @@ GameObject:
   - component: {fileID: 4950505861460100075}
   - component: {fileID: 8382869678668922972}
   - component: {fileID: 1192646593159156217}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -492,6 +490,8 @@ MonoBehaviour:
   defense: 0
   speed: 0
   currentHealth: 0
+  critChance: 0.15
+  critMultiplier: 1.5
 --- !u!114 &1192646593159156217
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,7 +621,7 @@ GameObject:
   - component: {fileID: 1656749146607812177}
   - component: {fileID: 7428649824247333298}
   - component: {fileID: 8514052504343710407}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SwordHitbox_Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -701,7 +701,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2026600205181574a90c3ac5a05b78c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordHitbox
-  damage: 1
 --- !u!1 &7624026820483398949
 GameObject:
   m_ObjectHideFlags: 0
@@ -713,7 +712,7 @@ GameObject:
   - component: {fileID: 1258106569380931865}
   - component: {fileID: 5988998419026256519}
   - component: {fileID: 192787997810350852}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: SwordHitbox_Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -793,4 +792,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2026600205181574a90c3ac5a05b78c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordHitbox
-  damage: 1

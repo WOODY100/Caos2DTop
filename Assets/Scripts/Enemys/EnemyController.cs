@@ -9,6 +9,8 @@ public class EnemyController : MonoBehaviour
     protected Vector2 moveDirection;
     protected bool canMove = true;
 
+    public bool CanMove => canMove;
+
     protected virtual void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -23,7 +25,7 @@ public class EnemyController : MonoBehaviour
 
     public void SetMoveDirection(Vector2 dir)
     {
-        moveDirection = dir.normalized;
+        moveDirection = dir == Vector2.zero ? Vector2.zero : dir.normalized;
     }
 
     public Vector2 GetMoveDirection()
@@ -39,5 +41,10 @@ public class EnemyController : MonoBehaviour
     public void Stop()
     {
         moveDirection = Vector2.zero;
+    }
+
+    public void SetCanMove(bool value)
+    {
+        canMove = value;
     }
 }

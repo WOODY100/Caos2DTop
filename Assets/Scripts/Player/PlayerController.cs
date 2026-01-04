@@ -58,35 +58,21 @@ public class PlayerController : MonoBehaviour
 
     void UpdateDirection()
     {
-        if (moveInput == Vector2.zero) return;
+        if (moveInput == Vector2.zero || !canMove || IsAttacking)
+            return;
 
         if (Mathf.Abs(moveInput.x) > Mathf.Abs(moveInput.y))
         {
-            if (moveInput.x > 0)
-            {
-                currentDirection = Direction.Right;
-                lastMoveDirection = Vector2.right;
-            }
-            else
-            {
-                currentDirection = Direction.Left;
-                lastMoveDirection = Vector2.left;
-            }
+            currentDirection = moveInput.x > 0 ? Direction.Right : Direction.Left;
         }
         else
         {
-            if (moveInput.y > 0)
-            {
-                currentDirection = Direction.Up;
-                lastMoveDirection = Vector2.up;
-            }
-            else
-            {
-                currentDirection = Direction.Down;
-                lastMoveDirection = Vector2.down;
-            }
+            currentDirection = moveInput.y > 0 ? Direction.Up : Direction.Down;
         }
+
+        lastMoveDirection = GetDirectionVector();
     }
+
 
     public Vector2 GetAnimationDirection()
     {
