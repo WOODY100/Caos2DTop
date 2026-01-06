@@ -596,7 +596,7 @@ GameObject:
   - component: {fileID: 1259069302123671679}
   - component: {fileID: 1404303046635046732}
   - component: {fileID: 7808329081641220533}
-  - component: {fileID: 3920047192581367426}
+  - component: {fileID: 7624019553637460653}
   m_Layer: 0
   m_Name: Golem
   m_TagString: Enemy
@@ -900,7 +900,7 @@ NavMeshAgent:
   m_BaseOffset: 2.375
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &3920047192581367426
+--- !u!114 &7624019553637460653
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -909,13 +909,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8975878199476940112}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbe5e770f45fef1409eddb52fb706292, type: 3}
+  m_Script: {fileID: 11500000, guid: d71e8f6ff7b56494eae5362a90a664b8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeEnemyAI
   player: {fileID: 0}
+  separationRadius: 0.6
+  separationStrength: 1.2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
   detectionDistance: 4
-  chaseDistance: 15
+  chaseDistance: 7
   attackDistance: 1.1
-  idleTime: 4
-  patrolRadius: 7
-  patrolWaitTime: 3
+  idleTime: 1
+  patrolRadius: 3
+  patrolWaitTime: 1.5

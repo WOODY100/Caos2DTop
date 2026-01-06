@@ -601,6 +601,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "645373e0-a7a4-468f-a656-6db60e0a384b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -735,43 +744,26 @@
                     "action": "Attack",
                     "isComposite": false,
                     "isPartOfComposite": false
-                }
-            ]
-        },
-        {
-            "name": "Debug",
-            "id": "3d075243-4342-4acd-8fd7-f28f4d6bc317",
-            "actions": [
-                {
-                    "name": "AddExp",
-                    "type": "Button",
-                    "id": "2c584439-a68c-4ae5-8830-301216bc9492",
-                    "expectedControlType": "",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
-                }
-            ],
-            "bindings": [
+                },
                 {
                     "name": "",
-                    "id": "e9154ece-f011-46e3-8c1a-1d4153abd5b8",
-                    "path": "",
+                    "id": "3e7f5984-20fd-44b2-b2e9-85db373ba7ac",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
-                    "groups": "",
-                    "action": "AddExp",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "bb4e6280-6083-4e67-9f81-c6a9c68452f0",
-                    "path": "<Keyboard>/x",
+                    "id": "77f756f1-8914-4e3a-940b-778d0388fb48",
+                    "path": "<Gamepad>/buttonSouth",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
-                    "action": "AddExp",
+                    "groups": ";Gamepad",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -11,11 +11,11 @@ public class ExpDebugInput : MonoBehaviour
         controls = new Controls();
         playerExp = FindFirstObjectByType<PlayerExperience>();
 
-        controls.Debug.AddExp.performed += ctx =>
+        /*controls.Debug.AddExp.performed += ctx =>
         {
             playerExp.AddExp(25);
             Debug.Log("EXP +25");
-        };
+        };*/
     }
 
     private void OnEnable()

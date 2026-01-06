@@ -201,6 +201,7 @@ GameObject:
   - component: {fileID: 4950505861460100075}
   - component: {fileID: 8382869678668922972}
   - component: {fileID: 1192646593159156217}
+  - component: {fileID: 7500694566589599887}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -505,111 +506,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerExperience
   level: 1
-  levelUpUI: {fileID: 0}
   currentExp: 0
   expToNextLevel: 100
   expMultiplier: 1.5
-  levelStats:
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
-  - bonusHealth: 10
-    bonusAttack: 5
-    bonusDefense: 5
-    bonusSpeed: 0.1
+--- !u!114 &7500694566589599887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936183076624203310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af8401ffd8c799b45ae526d53922a9d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawnResolver
 --- !u!1 &6814656865112750080
 GameObject:
   m_ObjectHideFlags: 0

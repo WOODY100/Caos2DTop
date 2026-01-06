@@ -48,6 +48,7 @@ public class EnemyHealth : MonoBehaviour
         controller.Stop();
         controller.enabled = false;
         animator.PlayDeath();
+        GetComponent<EnemyAIBase>()?.SendMessage("ReleaseAttackSlot");
 
         Destroy(gameObject, 1.2f);
     }

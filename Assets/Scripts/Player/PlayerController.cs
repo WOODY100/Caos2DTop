@@ -97,4 +97,9 @@ public class PlayerController : MonoBehaviour
     {
         return moveInput != Vector2.zero;
     }
+
+    public void SetInputEnabled(bool value)
+    {
+        canMove = value;
+    }
 }

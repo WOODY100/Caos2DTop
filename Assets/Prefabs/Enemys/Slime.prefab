@@ -278,7 +278,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -5.6873903, y: 1.1674986}
+  m_Offset: {x: -5.715974, y: 1.3799834}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -288,7 +288,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0651093, y: 1.2020199}
+  m_Size: {x: 1.3672843, y: 1.6269898}
   m_EdgeRadius: 0
 --- !u!114 &1210747145698440977
 MonoBehaviour:
@@ -323,7 +323,7 @@ GameObject:
   - component: {fileID: 7943139309827126155}
   - component: {fileID: 788150970196590332}
   - component: {fileID: 7336610882825620498}
-  - component: {fileID: 321515792163465834}
+  - component: {fileID: -7507042788461798882}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Enemy
@@ -408,7 +408,7 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_SpriteSortPoint: 1
 --- !u!95 &5683713836683867994
 Animator:
   serializedVersion: 7
@@ -492,17 +492,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.01623547, y: -0.17984268}
+  m_Offset: {x: -0.0015752316, y: -0.08824599}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
+    pivot: {x: 0.5073292, y: 0.10114334}
     oldSize: {x: 1, y: 1}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.67065215, y: 0.8679828}
+  m_Size: {x: 0.75716066, y: 0.6746118}
   m_EdgeRadius: 0
 --- !u!114 &8285868314573369576
 MonoBehaviour:
@@ -636,7 +636,7 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &321515792163465834
+--- !u!114 &-7507042788461798882
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -645,16 +645,21 @@ MonoBehaviour:
   m_GameObject: {fileID: 3903530604959342129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbe5e770f45fef1409eddb52fb706292, type: 3}
+  m_Script: {fileID: 11500000, guid: d71e8f6ff7b56494eae5362a90a664b8, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
+  m_EditorClassIdentifier: Assembly-CSharp::MeleeEnemyAI
   player: {fileID: 0}
+  separationRadius: 0.6
+  separationStrength: 1.2
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
   detectionDistance: 4
   chaseDistance: 7
   attackDistance: 1.1
-  idleTime: 4
+  idleTime: 1
   patrolRadius: 3
-  patrolWaitTime: 4
+  patrolWaitTime: 1.5
 --- !u!1 &4913378468304750030
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,7 +727,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -5.6873903, y: 1.1674986}
+  m_Offset: {x: -5.715974, y: 1.379983}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -732,7 +737,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0651093, y: 1.2020199}
+  m_Size: {x: 1.367284, y: 1.62699}
   m_EdgeRadius: 0
 --- !u!114 &1816022320522490340
 MonoBehaviour:
@@ -813,7 +818,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -5.6873903, y: 1.1674986}
+  m_Offset: {x: -5.715974, y: 1.379983}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -823,7 +828,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0651093, y: 1.2020199}
+  m_Size: {x: 1.367284, y: 1.62699}
   m_EdgeRadius: 0
 --- !u!114 &6432983403033373353
 MonoBehaviour:
@@ -904,7 +909,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -5.6873903, y: 1.1674986}
+  m_Offset: {x: -5.715974, y: 1.379983}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -914,7 +919,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.0651093, y: 1.2020199}
+  m_Size: {x: 1.367284, y: 1.62699}
   m_EdgeRadius: 0
 --- !u!114 &4185523192494406380
 MonoBehaviour:
