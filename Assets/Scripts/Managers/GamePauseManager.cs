@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class GamePauseManager : MonoBehaviour
 {
+    public GameObject pauseMenu;
+
     public static GamePauseManager Instance { get; private set; }
 
     private HashSet<object> pauseRequests = new();
@@ -34,5 +36,18 @@ public class GamePauseManager : MonoBehaviour
     void UpdatePauseState()
     {
         Time.timeScale = pauseRequests.Count > 0 ? 0f : 1f;
+    }
+
+    public void PauseGame()
+    {
+        //if (InventoryHUD.InventoryHud.activeSelf) return;
+        pauseMenu.SetActive(true);
+        Time.timeScale = 0f;
+    }
+
+    public void ResumeGame()
+    {
+        pauseMenu.SetActive(false);
+        Time.timeScale = 1f;
     }
 }

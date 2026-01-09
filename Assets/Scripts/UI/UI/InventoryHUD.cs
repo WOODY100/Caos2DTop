@@ -1,8 +1,14 @@
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class InventoryHUD : MonoBehaviour
 {
+    //public static GameObject InventoryHud;
+
+    //public InventoryHUD Instance { get; private set; }
+    //public static object inventoryHud { get; internal set; }
+
     [Header("Inventory Grid")]
     [SerializeField] private Transform gridParent;
     [SerializeField] private GameObject slotPrefab;
@@ -40,6 +46,7 @@ public class InventoryHUD : MonoBehaviour
 
     public void Toggle()
     {
+        //if (GamePauseManager.Instance.pauseMenu.activeSelf) return;
         gameObject.SetActive(!gameObject.activeSelf);
     }
 

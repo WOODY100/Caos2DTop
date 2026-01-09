@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro.EditorUtilities;
+using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -15,10 +16,15 @@ public class PlayerController : MonoBehaviour
 
     [Header("Attack")]
     public bool IsAttacking { get; private set; }
+
     public void SetAttacking(bool value)
     {
         IsAttacking = value;
     }
+
+    [Header("Menu Pause")]
+    private bool gameIsPaused = false;
+    public bool GameIsPaused { get => gameIsPaused; }
 
     private Rigidbody2D rb;
     private Vector2 moveInput;
@@ -37,11 +43,13 @@ public class PlayerController : MonoBehaviour
     void OnEnable()
     {
         controls.Enable();
+        controls.Player.Pause.performed += ctx => OpenClosePauseMenu();
     }
 
     void OnDisable()
     {
         controls.Disable();
+        controls.Player.Pause.performed -= ctx => OpenClosePauseMenu();
     }
 
     void Update()
@@ -101,5 +109,19 @@ public class PlayerController : MonoBehaviour
     public void SetInputEnabled(bool value)
     {
         canMove = value;
+    }
+
+    void OpenClosePauseMenu()
+    {        
+        if (gameIsPaused)
+        {
+            GamePauseManager.Instance.ResumeGame();
+            gameIsPaused = false;
+        }
+        else
+        {
+            GamePauseManager.Instance.PauseGame();
+            gameIsPaused = true;
+        }            
     }
 }

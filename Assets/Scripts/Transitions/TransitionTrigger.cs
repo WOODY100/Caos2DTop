@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.InputSystem;
@@ -24,38 +25,34 @@ public class TransitionTrigger : MonoBehaviour
     public bool requireInput = true;
     public InputActionReference interactAction;
 
-    private bool playerInside;
-    private bool isTransitioning;
+    bool playerInside;
+    bool isTransitioning;
 
-    private void OnEnable()
+    void OnEnable()
     {
         if (interactAction != null)
             interactAction.action.performed += OnInteract;
     }
 
-    private void OnDisable()
+    void OnDisable()
     {
         if (interactAction != null)
             interactAction.action.performed -= OnInteract;
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
         playerInside = true;
 
         if (!requireInput)
-        {
-            ExecuteTransition();
-        }
+            StartCoroutine(DoTransition());
         else
-        {
             interactAction?.action.Enable();
-        }
     }
 
-    private void OnTriggerExit2D(Collider2D other)
+    void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
 
@@ -65,25 +62,49 @@ public class TransitionTrigger : MonoBehaviour
 
     void OnInteract(InputAction.CallbackContext ctx)
     {
-        if (!playerInside || !requireInput) return;
-        ExecuteTransition();
+        if (!playerInside || isTransitioning) return;
+        StartCoroutine(DoTransition());
     }
 
-    void ExecuteTransition()
+    IEnumerator DoTransition()
     {
-        if (isTransitioning) return;
         isTransitioning = true;
 
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        PlayerController pc = player.GetComponent<PlayerController>();
+        pc?.SetInputEnabled(false);
+
+        // 1️⃣ Fade Out
+        if (FadeManager.Instance != null)
+            yield return FadeManager.Instance.FadeOut();
 
         if (transitionType == TransitionType.SameScene)
         {
-            player.transform.position = teleportTarget.position;
+            Vector3 oldPos = player.transform.position;
+            Vector3 newPos = teleportTarget.position;
+
+            // 2️⃣ Teleport
+            player.transform.position = newPos;
+
+            // 3️⃣ Notificar a Cinemachine (CLAVE)
+            if (CameraTransitionController.Instance != null)
+            {
+                CameraTransitionController.Instance.NotifyTeleport(oldPos, newPos);
+            }
+
+            // 4️⃣ Fade In
+            if (FadeManager.Instance != null)
+                yield return FadeManager.Instance.FadeIn();
+
+            pc?.SetInputEnabled(true);
         }
         else
         {
+            // Cambio de escena
             SpawnManager.Instance.SetSpawn(spawnID);
             SceneManager.LoadScene(sceneName);
         }
+
+        isTransitioning = false;
     }
 }

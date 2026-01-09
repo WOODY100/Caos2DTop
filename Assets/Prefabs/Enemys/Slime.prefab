@@ -315,6 +315,7 @@ GameObject:
   - component: {fileID: 5683713836683867994}
   - component: {fileID: 6403130024196488949}
   - component: {fileID: 2641630404120723059}
+  - component: {fileID: 7336610882825620498}
   - component: {fileID: 8285868314573369576}
   - component: {fileID: 730233116999935799}
   - component: {fileID: 4498662073587472967}
@@ -322,8 +323,9 @@ GameObject:
   - component: {fileID: 3532958600484241452}
   - component: {fileID: 7943139309827126155}
   - component: {fileID: 788150970196590332}
-  - component: {fileID: 7336610882825620498}
   - component: {fileID: -7507042788461798882}
+  - component: {fileID: 8450322040964987707}
+  - component: {fileID: 790210559423787379}
   m_Layer: 0
   m_Name: Slime
   m_TagString: Enemy
@@ -504,6 +506,28 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.75716066, y: 0.6746118}
   m_EdgeRadius: 0
+--- !u!195 &7336610882825620498
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903530604959342129}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 1
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0.2
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!114 &8285868314573369576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,28 +638,6 @@ MonoBehaviour:
   lowLevelColor: {r: 0, g: 1, b: 0, a: 1}
   equalLevelColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   highLevelColor: {r: 1, g: 0, b: 0, a: 1}
---- !u!195 &7336610882825620498
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3903530604959342129}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 1
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0.2
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 1
-  m_BaseOffset: 0.5
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
 --- !u!114 &-7507042788461798882
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,6 +662,35 @@ MonoBehaviour:
   idleTime: 1
   patrolRadius: 3
   patrolWaitTime: 1.5
+--- !u!114 &8450322040964987707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903530604959342129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c840f6c6d1591d4b8b1aeca6883ac5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootContainer
+  loot:
+  - item: {fileID: 11400000, guid: 82929fb81afff82429c71db03fbe1dfb, type: 2}
+    amount: 1
+--- !u!114 &790210559423787379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3903530604959342129}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5604144981c84fe43b4bcdcc1fc48eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  interactAction: {fileID: 774627721682249014, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
+  autoOpen: 0
 --- !u!1 &4913378468304750030
 GameObject:
   m_ObjectHideFlags: 0

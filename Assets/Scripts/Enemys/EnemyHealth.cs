@@ -5,6 +5,8 @@ public class EnemyHealth : MonoBehaviour
     public int maxHealth = 30;
     private int currentHealth;
 
+    private EnemyLootDrop lootDrop;
+
     private EnemyController controller;
     private EnemyAnimator animator;
     private EnemyExperience exp;
@@ -15,6 +17,7 @@ public class EnemyHealth : MonoBehaviour
         controller = GetComponent<EnemyController>();
         animator = GetComponent<EnemyAnimator>();
         exp = GetComponent<EnemyExperience>();
+        lootDrop = GetComponent<EnemyLootDrop>();
     }
 
     public void TakeDamage(int amount, bool isCritical = false)
@@ -49,6 +52,7 @@ public class EnemyHealth : MonoBehaviour
         controller.enabled = false;
         animator.PlayDeath();
         GetComponent<EnemyAIBase>()?.SendMessage("ReleaseAttackSlot");
+        lootDrop?.EnableLoot();
 
         Destroy(gameObject, 1.2f);
     }
