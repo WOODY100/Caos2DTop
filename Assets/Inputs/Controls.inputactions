@@ -608,13 +608,22 @@
                     "id": "645373e0-a7a4-468f-a656-6db60e0a384b",
                     "expectedControlType": "",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
                     "name": "Pause",
                     "type": "Button",
                     "id": "6ca274f9-57dc-45da-b198-044046c5abf9",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "7b67ecb4-8aaa-415d-a9e2-138d527ddab7",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -780,7 +789,7 @@
                     "name": "",
                     "id": "38dac0b1-2bf7-4185-add9-4ca714503860",
                     "path": "<Keyboard>/p",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Pause",
@@ -791,10 +800,32 @@
                     "name": "",
                     "id": "19ac2863-9c9e-45b9-8eb2-b0fb1ead7215",
                     "path": "<Gamepad>/start",
-                    "interactions": "",
+                    "interactions": "Press",
                     "processors": "",
                     "groups": ";Gamepad",
                     "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ce61cecb-ed7b-4bfd-8713-d8e729baee50",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "84114dcd-fa96-4422-973a-b0a5fdaa16a0",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Cancel",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

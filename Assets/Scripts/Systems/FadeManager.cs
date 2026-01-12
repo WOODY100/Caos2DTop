@@ -18,7 +18,6 @@ public class FadeManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public IEnumerator FadeOut()

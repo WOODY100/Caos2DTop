@@ -1,60 +1,118 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyHealth : MonoBehaviour
 {
+    [Header("Health")]
     public int maxHealth = 30;
     private int currentHealth;
 
-    private EnemyLootDrop lootDrop;
+    [Header("Death")]
+    public float corpseDuration = 60f;
 
+    public bool IsDead { get; private set; }
+
+    private SpriteRenderer spriteRenderer;
     private EnemyController controller;
     private EnemyAnimator animator;
     private EnemyExperience exp;
+    private EnemyLootDrop lootDrop;
+    private EnemyAIBase ai;
+    private EnemyAttack attack;
+    private Rigidbody2D rb;
+    private NavMeshAgent agent;
 
     void Awake()
     {
         currentHealth = maxHealth;
+
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         controller = GetComponent<EnemyController>();
         animator = GetComponent<EnemyAnimator>();
         exp = GetComponent<EnemyExperience>();
         lootDrop = GetComponent<EnemyLootDrop>();
+        ai = GetComponent<EnemyAIBase>();
+        attack = GetComponent<EnemyAttack>();
+        rb = GetComponent<Rigidbody2D>();
+        agent = GetComponent<NavMeshAgent>();
     }
 
     public void TakeDamage(int amount, bool isCritical = false)
     {
-        if (currentHealth <= 0) return;
+        if (IsDead) return;
 
         currentHealth -= amount;
 
         FloatingTextManager.Instance.ShowDamage(
             amount,
-            transform.position + Vector3.up * 0.8f, isCritical
+            transform.position + Vector3.up * 0.8f,
+            isCritical
         );
 
         animator.PlayHurt();
 
         if (currentHealth <= 0)
-        {
             Die();
-        }
     }
 
     void Die()
     {
-        exp?.GiveExperience();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sortingOrder = 3;
+        }
 
+        if (IsDead) return;
+        IsDead = true;
+
+        // 🎞️ Animación
+        animator.PlayDeath();
+
+        // 🎯 Recompensas
+        exp?.GiveExperience();
         FloatingTextManager.Instance.ShowExp(
             exp.expReward,
             transform.position + Vector3.up * 1.2f
         );
 
-        controller.Stop();
-        controller.enabled = false;
-        animator.PlayDeath();
-        GetComponent<EnemyAIBase>()?.SendMessage("ReleaseAttackSlot");
-        lootDrop?.EnableLoot();
+        // 💰 Loot (prefab independiente)
+        lootDrop?.DropLoot();
 
-        Destroy(gameObject, 1.2f);
+        // 🧠 IA / Ataque
+        if (ai) ai.enabled = false;
+        if (attack) attack.enabled = false;
+
+        // 🧭 NavMesh
+        if (agent)
+        {
+            agent.ResetPath();
+            agent.enabled = false;
+        }
+
+        // 🧍 Física
+        if (rb)
+        {
+            rb.linearVelocity = Vector2.zero;
+            rb.simulated = false;
+        }
+
+        // 🚫 Controller
+        if (controller)
+        {
+            controller.Stop();
+            controller.enabled = false;
+        }
+
+        // ⏳ Cadáver
+        StartCoroutine(CorpseRoutine());
+    }
+
+
+    IEnumerator CorpseRoutine()
+    {
+        yield return new WaitForSeconds(corpseDuration);
+        Destroy(gameObject);
     }
 
     public void SetMaxHealth(int value)

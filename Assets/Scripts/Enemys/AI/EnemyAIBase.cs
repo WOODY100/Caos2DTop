@@ -3,6 +3,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyController))]
+[RequireComponent(typeof(EnemyHealth))]
 public abstract class EnemyAIBase : MonoBehaviour
 {
     public enum State
@@ -43,6 +44,7 @@ public abstract class EnemyAIBase : MonoBehaviour
 
     protected NavMeshAgent agent;
     protected EnemyController controller;
+    protected EnemyHealth health;
 
     protected Vector3 originPosition;
 
@@ -52,6 +54,7 @@ public abstract class EnemyAIBase : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         controller = GetComponent<EnemyController>();
+        health = GetComponent<EnemyHealth>();
 
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 60);
@@ -61,14 +64,28 @@ public abstract class EnemyAIBase : MonoBehaviour
         originPosition = transform.position;
         idleTimer = idleTime;
         currentState = State.Idle;
-        
+
+        // 🔍 Auto-detectar Player
+        if (player == null)
+        {
+            GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
+            if (playerObj != null)
+                player = playerObj.transform;
+        }
+
+        // 🎯 Attack slots (opcional)
         attackSlots = player
-        ? player.GetComponent<PlayerAttackSlots>()
-        : null;
+            ? player.GetComponent<PlayerAttackSlots>()
+            : null;
     }
+
 
     protected virtual void Update()
     {
+        // 🔴 CLAVE ABSOLUTA
+        if (health != null && health.IsDead)
+            return;
+
         float distanceToPlayer = player
             ? Vector2.Distance(transform.position, player.position)
             : Mathf.Infinity;
@@ -172,7 +189,6 @@ public abstract class EnemyAIBase : MonoBehaviour
         agent.SetDestination(player.position);
     }
 
-
     protected virtual void ReturnToOrigin()
     {
         agent.SetDestination(originPosition);
@@ -184,14 +200,27 @@ public abstract class EnemyAIBase : MonoBehaviour
     }
 
     // ─────────────────────────────
-    // ABSTRACT / OVERRIDABLE
+    // ABSTRACT
     // ─────────────────────────────
 
     protected abstract void HandleAttack(float distance);
 
     // ─────────────────────────────
-    // MOVEMENT & SEPARATION
+    // MOVEMENT
     // ─────────────────────────────
+
+    protected void UpdateMovementDirection()
+    {
+        if (agent.velocity.sqrMagnitude > 0.01f)
+        {
+            Vector3 separation = CalculateSeparation();
+            controller.SetMoveDirection(agent.velocity + separation);
+        }
+        else
+        {
+            controller.Stop();
+        }
+    }
 
     protected Vector3 CalculateSeparation()
     {
@@ -214,19 +243,6 @@ public abstract class EnemyAIBase : MonoBehaviour
         return force * separationStrength;
     }
 
-    protected void UpdateMovementDirection()
-    {
-        if (agent.velocity.sqrMagnitude > 0.01f)
-        {
-            Vector3 separation = CalculateSeparation();
-            controller.SetMoveDirection(agent.velocity + separation);
-        }
-        else
-        {
-            controller.Stop();
-        }
-    }
-
     protected bool PlayerDetected()
     {
         if (!player) return false;
@@ -236,7 +252,7 @@ public abstract class EnemyAIBase : MonoBehaviour
     protected bool TryAcquireAttackSlot()
     {
         if (hasAttackSlot) return true;
-        if (attackSlots == null) return true; // fallback
+        if (attackSlots == null) return true;
 
         hasAttackSlot = attackSlots.RequestSlot(this);
         return hasAttackSlot;
@@ -262,21 +278,5 @@ public abstract class EnemyAIBase : MonoBehaviour
             tangent * Mathf.Sin(Time.time * 2f);
 
         agent.SetDestination(targetPos);
-    }
-
-    // ─────────────────────────────
-    // DEBUG
-    // ─────────────────────────────
-
-    protected virtual void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionDistance);
-
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, attackDistance);
-
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(originPosition, patrolRadius);
     }
 }

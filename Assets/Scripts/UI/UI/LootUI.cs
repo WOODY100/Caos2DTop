@@ -3,44 +3,42 @@ using UnityEngine;
 
 public class LootUI : MonoBehaviour
 {
-    public static LootUI Instance;
+    public static LootUI Instance { get; private set; }
 
     [Header("UI")]
-    public GameObject panel;
-    public Transform content;
-    public LootItemUI itemPrefab;
+    [SerializeField] private GameObject panel;
+    [SerializeField] private Transform content;
+    [SerializeField] private LootItemUI itemPrefab;
 
     private LootContainer currentContainer;
-    private ChestInteractable currentChest;
-
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         Instance = this;
         panel.SetActive(false);
     }
 
     public void Open(LootContainer container)
     {
-        currentContainer = container;
-        currentChest = container.GetComponent<ChestInteractable>();
+        if (container == null) return;
 
+        currentContainer = container;
         panel.SetActive(true);
         Refresh();
     }
 
     public void Refresh()
     {
-        if (itemPrefab == null)
-        {
-            Debug.LogError("LootUI → itemPrefab NO asignado");
-            return;
-        }
+        if (currentContainer == null) return;
 
         foreach (Transform child in content)
             Destroy(child.gameObject);
-
-        if (currentContainer == null) return;
 
         List<LootEntry> loot = currentContainer.GetLoot();
 
@@ -49,18 +47,28 @@ public class LootUI : MonoBehaviour
             LootItemUI ui = Instantiate(itemPrefab, content);
             ui.Setup(entry, currentContainer);
         }
-
-        // Si no queda loot → cerrar
-        if (loot.Count == 0)
-        {
-            currentChest?.OnLootEmpty();
-            Close();
-        }
     }
 
     public void Close()
     {
+        if (!panel.activeSelf)
+            return;
+
         panel.SetActive(false);
         currentContainer = null;
+    }
+
+    public void CloseIfCurrent(LootContainer container)
+    {
+        if (currentContainer == container)
+            Close();
+    }
+
+    public void OnCancel()
+    {
+        if (!panel.activeSelf)
+            return;
+
+        Close();
     }
 }

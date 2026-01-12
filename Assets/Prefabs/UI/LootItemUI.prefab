@@ -360,7 +360,7 @@ GameObject:
   - component: {fileID: 9221865264698151105}
   - component: {fileID: 4826957107592975788}
   m_Layer: 5
-  m_Name: LootItemButton
+  m_Name: LootItemUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

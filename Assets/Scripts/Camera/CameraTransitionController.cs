@@ -17,7 +17,6 @@ public class CameraTransitionController : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
 
         CacheCamera();
     }

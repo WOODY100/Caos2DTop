@@ -18,15 +18,13 @@ public class LootItemUI : MonoBehaviour, IPointerClickHandler
         this.entry = entry;
         this.container = container;
 
-        // ICONO
         if (icon != null)
         {
             icon.sprite = entry.item.icon;
-            icon.enabled = true; // 🔥 CLAVE
-            icon.color = Color.white; // seguridad
+            icon.enabled = true;
+            icon.color = Color.white;
         }
 
-        // TEXTO
         if (nameText != null)
             nameText.text = entry.item.itemName;
 
@@ -48,8 +46,10 @@ public class LootItemUI : MonoBehaviour, IPointerClickHandler
             return;
         }
 
+        // 👉 USAMOS entry.amount DIRECTAMENTE
         bool added = InventoryManager.Instance.AddItem(entry.item, entry.amount);
-        if (!added) return;
+        if (!added)
+            return; // inventario lleno → NO se pierde el item
 
         container.RemoveLoot(entry);
         Destroy(gameObject);

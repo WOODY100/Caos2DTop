@@ -25,52 +25,23 @@ public class EquipmentManager : MonoBehaviour
 
         Instance = this;
         playerStats = FindAnyObjectByType<PlayerStats>();
-
     }
 
     public bool Equip(ItemData item)
     {
-        if (item == null)
+        if (item == null || !IsEquipable(item))
             return false;
 
-        if (!IsEquipable(item))
-        {
+        EquipmentSlotUI slot = GetSlot(item.type);
+        if (slot == null || !slot.CanEquip(item))
             return false;
-        }
 
-        switch (item.type)
-        {
-            case ItemType.Helmet:
-                helmet.Equip(item);
-                break;
+        // 🔁 recuperar item anterior
+        ItemData previousItem = slot.Equip(item);
 
-            case ItemType.Armor:
-                armor.Equip(item);
-                break;
-
-            case ItemType.Legs:
-                legs.Equip(item);
-                break;
-
-            case ItemType.Boots:
-                boots.Equip(item);
-                break;
-
-            case ItemType.Sword:
-                sword.Equip(item);
-                break;
-
-            case ItemType.Necklace:
-                necklace.Equip(item);
-                break;
-
-            case ItemType.Ring:
-                ring.Equip(item);
-                break;
-
-            default:
-                return false;
-        }
+        // 🔄 devolver al inventario si existía
+        if (previousItem != null)
+            InventoryManager.Instance.AddItem(previousItem, 1);
 
         playerStats?.RecalculateStats();
         return true;
@@ -79,16 +50,13 @@ public class EquipmentManager : MonoBehaviour
 
     public void Unequip(ItemType type)
     {
-        switch (type)
-        {
-            case ItemType.Helmet: helmet.Unequip(); break;
-            case ItemType.Armor: armor.Unequip(); break;
-            case ItemType.Legs: legs.Unequip(); break;
-            case ItemType.Boots: boots.Unequip(); break;
-            case ItemType.Sword: sword.Unequip(); break;
-            case ItemType.Necklace: necklace.Unequip(); break;
-            case ItemType.Ring: ring.Unequip(); break;
-        }
+        EquipmentSlotUI slot = GetSlot(type);
+        if (slot == null) return;
+
+        ItemData removedItem = slot.Unequip();
+
+        if (removedItem != null)
+            InventoryManager.Instance.AddItem(removedItem, 1);
 
         playerStats?.RecalculateStats();
     }
@@ -116,6 +84,26 @@ public class EquipmentManager : MonoBehaviour
         necklace?.GetItem(),
         ring?.GetItem()
         };
+    }
+
+    private EquipmentSlotUI GetSlot(ItemType type)
+    {
+        return type switch
+        {
+            ItemType.Helmet => helmet,
+            ItemType.Armor => armor,
+            ItemType.Legs => legs,
+            ItemType.Boots => boots,
+            ItemType.Sword => sword,
+            ItemType.Necklace => necklace,
+            ItemType.Ring => ring,
+            _ => null
+        };
+    }
+
+    public ItemData GetEquipped(ItemType type)
+    {
+        return GetSlot(type)?.GetItem();
     }
 
 }

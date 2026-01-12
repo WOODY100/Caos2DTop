@@ -7,11 +7,24 @@ public class LevelUpManager : MonoBehaviour
     private PlayerStats playerStats;
     private LevelUpUI levelUpUI;
 
+    public static LevelUpManager Instance;
+
     private void Awake()
     {
+        if (Instance != null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+
         playerExp = FindFirstObjectByType<PlayerExperience>();
         playerStats = FindFirstObjectByType<PlayerStats>();
-        levelUpUI = FindFirstObjectByType<LevelUpUI>();
+
+        levelUpUI = FindFirstObjectByType<LevelUpUI>(
+            FindObjectsInactive.Include
+        );
     }
 
     private void OnEnable()
@@ -26,7 +39,20 @@ public class LevelUpManager : MonoBehaviour
 
     private void OnPlayerLevelUp(LevelStats stats, int level)
     {
-        List<LevelUpOption> options = GenerateOptions();
+        if (levelUpUI == null)
+        {
+            levelUpUI = FindFirstObjectByType<LevelUpUI>(
+                FindObjectsInactive.Include
+            );
+
+            if (levelUpUI == null)
+            {
+                Debug.LogError("❌ LevelUpUI no encontrado en la escena");
+                return;
+            }
+        }
+
+        var options = GenerateOptions();
         levelUpUI.Show(options, ApplyOption);
     }
 

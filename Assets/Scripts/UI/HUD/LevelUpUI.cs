@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using TMPro;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
 
 public class LevelUpUI : MonoBehaviour
 {
@@ -22,8 +22,8 @@ public class LevelUpUI : MonoBehaviour
     {
         onOptionSelected = callback;
 
-        panel.SetActive(true);
-        GamePauseManager.Instance.RequestPause(this);
+        panel.SetActive(true); // 🔥 PRIMERO mostrar
+        GamePauseManager.Instance.RequestPause(this); // 🔥 LUEGO pausar
 
         ClearButtons();
 
@@ -42,17 +42,17 @@ public class LevelUpUI : MonoBehaviour
         Close();
     }
 
+    private void Close()
+    {
+        panel.SetActive(false); // 🔥 primero ocultar
+        GamePauseManager.Instance.ReleasePause(this); // 🔥 luego reanudar
+    }
+
     private void ClearButtons()
     {
         foreach (Transform child in choicesParent)
         {
             Destroy(child.gameObject);
         }
-    }
-
-    private void Close()
-    {
-        GamePauseManager.Instance.ReleasePause(this);
-        panel.SetActive(false);
     }
 }

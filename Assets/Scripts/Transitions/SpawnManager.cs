@@ -15,7 +15,6 @@ public class SpawnManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public void SetSpawn(string spawnID)

@@ -13,6 +13,9 @@ public class MeleeEnemyAI : EnemyAIBase
 
     protected override void HandleAttack(float distance)
     {
+        if (health != null && health.IsDead)
+            return;
+
         if (distance > attackDistance)
         {
             ReleaseAttackSlot();
@@ -22,4 +25,5 @@ public class MeleeEnemyAI : EnemyAIBase
 
         attack.TryAttack();
     }
+
 }

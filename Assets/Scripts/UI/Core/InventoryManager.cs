@@ -27,8 +27,6 @@ public class InventoryManager : MonoBehaviour
         }
 
         Instance = this;
-        transform.SetParent(null); // fuerza root
-        DontDestroyOnLoad(gameObject);
     }
 
 
@@ -36,35 +34,47 @@ public class InventoryManager : MonoBehaviour
     // ITEM MANAGEMENT
     // ===============================
 
-    public bool AddItem(ItemData item, int v)
+    public bool AddItem(ItemData item, int amount)
     {
-        if (item == null) return false;
+        Debug.Log($"[Inventory] Agregado: {item.itemName} x{amount}");
 
-        // Monedas
+        if (item == null || amount <= 0)
+            return false;
+
+        // 💰 Monedas
         if (item.type == ItemType.Moneda)
         {
-            coins++;
+            coins += amount;
+            OnInventoryChanged?.Invoke();
             return true;
         }
 
-        // Llaves
+        // 🗝️ Llaves
         if (item.type == ItemType.Llave)
         {
-            keys++;
+            keys += amount;
+            OnInventoryChanged?.Invoke();
             return true;
         }
 
-        // Inventario lleno
-        if (items.Count >= inventorySize)
+        // 🎒 Ítems normales
+        // 👉 VALIDAR ESPACIO ANTES
+        if (items.Count + amount > inventorySize)
         {
-            Debug.Log("Inventario lleno");
+            Debug.Log("Inventario lleno (no hay espacio suficiente)");
             return false;
         }
 
-        items.Add(item);
+        // 👉 AGREGAR
+        for (int i = 0; i < amount; i++)
+        {
+            items.Add(item);
+        }
+
         OnInventoryChanged?.Invoke();
         return true;
     }
+
 
     public void RemoveItem(ItemData item)
     {

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 
@@ -20,6 +20,8 @@ public class InventoryHUD : MonoBehaviour
 
     private InventorySlotUI[] slots;
 
+    private bool isOpen;
+
     private void Awake()
     {
         slots = new InventorySlotUI[slotCount];
@@ -35,39 +37,71 @@ public class InventoryHUD : MonoBehaviour
     {
         InventoryManager.OnInventoryChanged += RefreshDelayed;
         Refresh();
+
         GamePauseManager.Instance.RequestPause(this);
     }
 
     private void OnDisable()
     {
         InventoryManager.OnInventoryChanged -= RefreshDelayed;
-        GamePauseManager.Instance.ReleasePause(this);
+
+        if (GamePauseManager.Instance != null)
+            GamePauseManager.Instance.ReleasePause(this);
     }
 
-    public void Toggle()
+    public void Open()
     {
-        //if (GamePauseManager.Instance.pauseMenu.activeSelf) return;
-        gameObject.SetActive(!gameObject.activeSelf);
+        if (isOpen) return;
+
+        // 🔒 No abrir inventario durante LevelUp
+        if (GamePauseManager.Instance.IsPausedBy<LevelUpUI>())
+            return;
+
+        isOpen = true;
+        gameObject.SetActive(true);
     }
 
     public void Close()
     {
+        if (!isOpen) return;
+
+        ItemTooltipUI.Instance?.Hide(); // 🔥 BLINDAJE
+
+        isOpen = false;
         gameObject.SetActive(false);
+    }
+
+
+    public void Toggle()
+    {
+        // 🚫 Si intento abrir pero el juego está pausado por otra UI (PauseMenu, LevelUp)
+        if (!isOpen && GamePauseManager.Instance.IsPaused())
+            return;
+
+        if (isOpen)
+            Close();
+        else
+            Open();
     }
 
     public void Refresh()
     {
+        Debug.Log($"[HUD] Items en inventario: {InventoryManager.Instance.items.Count}");
+
         var inventory = InventoryManager.Instance.items;
 
         for (int i = 0; i < slots.Length; i++)
         {
+            if (slots[i] == null)
+                continue;
+
             if (i < inventory.Count)
                 slots[i].SetItem(inventory[i]);
             else
                 slots[i].Clear();
         }
 
-        coinsText.text = InventoryManager.Instance.GetAmount(coinItem).ToString();
+        coinsText.text = InventoryManager.Instance.GetCoins().ToString();
     }
 
     private void RefreshDelayed()

@@ -43,13 +43,11 @@ public class PlayerController : MonoBehaviour
     void OnEnable()
     {
         controls.Enable();
-        controls.Player.Pause.performed += ctx => OpenClosePauseMenu();
     }
 
     void OnDisable()
     {
         controls.Disable();
-        controls.Player.Pause.performed -= ctx => OpenClosePauseMenu();
     }
 
     void Update()
@@ -109,19 +107,5 @@ public class PlayerController : MonoBehaviour
     public void SetInputEnabled(bool value)
     {
         canMove = value;
-    }
-
-    void OpenClosePauseMenu()
-    {        
-        if (gameIsPaused)
-        {
-            GamePauseManager.Instance.ResumeGame();
-            gameIsPaused = false;
-        }
-        else
-        {
-            GamePauseManager.Instance.PauseGame();
-            gameIsPaused = true;
-        }            
     }
 }

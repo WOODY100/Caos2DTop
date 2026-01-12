@@ -27,28 +27,32 @@ public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
         return item != null && item.type == acceptedType;
     }
 
-    public void Equip(ItemData item)
+    public ItemData Equip(ItemData item)
     {
-        if (!CanEquip(item)) return;
+        if (!CanEquip(item)) return null;
+
+        ItemData previousItem = equippedItem;
 
         equippedItem = item;
         icon.sprite = item.icon;
         icon.enabled = true;
 
         NotifyChange();
+        return previousItem;
     }
 
-    public void Unequip()
+    public ItemData Unequip()
     {
-        if (equippedItem == null) return;
+        if (equippedItem == null) return null;
 
-        InventoryManager.Instance.AddItem(equippedItem, 1);
-
+        ItemData oldItem = equippedItem;
         equippedItem = null;
+
         icon.sprite = null;
         icon.enabled = false;
 
         NotifyChange();
+        return oldItem;
     }
 
     public ItemData GetItem() => equippedItem;
@@ -67,6 +71,18 @@ public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         if (equippedItem == null) return;
-        Unequip();
+
+        EquipmentManager.Instance.Unequip(acceptedType);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (equippedItem == null) return;
+        ItemTooltipUI.Instance.Show(equippedItem);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ItemTooltipUI.Instance.Hide();
     }
 }

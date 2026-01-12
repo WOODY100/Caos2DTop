@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
-public class TransitionTrigger : MonoBehaviour
+public class TransitionTrigger : MonoBehaviour, IInteractable
 {
     public enum TransitionType
     {
@@ -22,23 +21,11 @@ public class TransitionTrigger : MonoBehaviour
     public string spawnID;
 
     [Header("Interaction")]
+    [Tooltip("Si es false, la transición ocurre automáticamente al entrar")]
     public bool requireInput = true;
-    public InputActionReference interactAction;
 
     bool playerInside;
     bool isTransitioning;
-
-    void OnEnable()
-    {
-        if (interactAction != null)
-            interactAction.action.performed += OnInteract;
-    }
-
-    void OnDisable()
-    {
-        if (interactAction != null)
-            interactAction.action.performed -= OnInteract;
-    }
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -48,8 +35,6 @@ public class TransitionTrigger : MonoBehaviour
 
         if (!requireInput)
             StartCoroutine(DoTransition());
-        else
-            interactAction?.action.Enable();
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -57,12 +42,14 @@ public class TransitionTrigger : MonoBehaviour
         if (!other.CompareTag("Player")) return;
 
         playerInside = false;
-        interactAction?.action.Disable();
     }
 
-    void OnInteract(InputAction.CallbackContext ctx)
+    // 🔔 Llamado SOLO por PlayerInteractor
+    public void Interact()
     {
+        if (!requireInput) return;
         if (!playerInside || isTransitioning) return;
+
         StartCoroutine(DoTransition());
     }
 
@@ -86,11 +73,9 @@ public class TransitionTrigger : MonoBehaviour
             // 2️⃣ Teleport
             player.transform.position = newPos;
 
-            // 3️⃣ Notificar a Cinemachine (CLAVE)
+            // 3️⃣ Notificar a Cinemachine
             if (CameraTransitionController.Instance != null)
-            {
                 CameraTransitionController.Instance.NotifyTeleport(oldPos, newPos);
-            }
 
             // 4️⃣ Fade In
             if (FadeManager.Instance != null)
