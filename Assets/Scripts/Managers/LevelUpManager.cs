@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 public class LevelUpManager : MonoBehaviour
 {
+    public static LevelUpManager Instance;
+
     private PlayerExperience playerExp;
     private PlayerStats playerStats;
     private LevelUpUI levelUpUI;
-
-    public static LevelUpManager Instance;
 
     private void Awake()
     {
@@ -18,27 +18,36 @@ public class LevelUpManager : MonoBehaviour
         }
 
         Instance = this;
-
-        playerExp = FindFirstObjectByType<PlayerExperience>();
-        playerStats = FindFirstObjectByType<PlayerStats>();
-
-        levelUpUI = FindFirstObjectByType<LevelUpUI>(
-            FindObjectsInactive.Include
-        );
     }
 
-    private void OnEnable()
+    // 🔔 REGISTRO DEL PLAYER (CLAVE)
+    public void RegisterPlayer(PlayerExperience exp, PlayerStats stats)
     {
-        playerExp.OnLevelUp += OnPlayerLevelUp;
+        // Desuscribirse del anterior (por seguridad)
+        if (playerExp != null)
+            playerExp.OnLevelUp -= OnPlayerLevelUp;
+
+        playerExp = exp;
+        playerStats = stats;
+
+        if (playerExp != null)
+            playerExp.OnLevelUp += OnPlayerLevelUp;
     }
 
-    private void OnDisable()
+    public void UnregisterPlayer(PlayerExperience exp)
     {
-        playerExp.OnLevelUp -= OnPlayerLevelUp;
+        if (playerExp == exp)
+        {
+            playerExp.OnLevelUp -= OnPlayerLevelUp;
+            playerExp = null;
+            playerStats = null;
+        }
     }
 
     private void OnPlayerLevelUp(LevelStats stats, int level)
     {
+        GameStateManager.Instance.SetState(GameState.LevelUp);
+
         if (levelUpUI == null)
         {
             levelUpUI = FindFirstObjectByType<LevelUpUI>(
@@ -83,11 +92,15 @@ public class LevelUpManager : MonoBehaviour
 
     private void ApplyOption(LevelUpOption option)
     {
+        if (playerStats == null)
+            return;
+
         playerStats.baseHealth += option.health;
         playerStats.baseAttack += option.attack;
         playerStats.baseDefense += option.defense;
         playerStats.baseSpeed += option.speed;
 
         playerStats.RecalculateStats();
+        GameStateManager.Instance.SetState(GameState.Playing);
     }
 }

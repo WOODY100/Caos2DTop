@@ -2,7 +2,10 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
+public class EquipmentSlotUI : MonoBehaviour,
+    IPointerClickHandler,
+    IPointerEnterHandler,
+    IPointerExitHandler
 {
     [Header("Slot Config")]
     public ItemType acceptedType;
@@ -10,16 +13,15 @@ public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
 
     private ItemData equippedItem;
 
-    private PlayerStats playerStats;
-    private InventoryHUD inventoryHUD;
-
     private void Awake()
     {
         if (icon != null)
             icon.enabled = false;
+    }
 
-        playerStats = Object.FindFirstObjectByType<PlayerStats>();
-        inventoryHUD = Object.FindFirstObjectByType<InventoryHUD>();
+    private void OnEnable()
+    {
+        RefreshFromEquipment();
     }
 
     public bool CanEquip(ItemData item)
@@ -37,7 +39,6 @@ public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
         icon.sprite = item.icon;
         icon.enabled = true;
 
-        NotifyChange();
         return previousItem;
     }
 
@@ -51,21 +52,16 @@ public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
         icon.sprite = null;
         icon.enabled = false;
 
-        NotifyChange();
         return oldItem;
     }
 
     public ItemData GetItem() => equippedItem;
 
-    private void NotifyChange()
+    public void Clear()
     {
-        // 🔄 Recalcula stats
-        if (playerStats != null)
-            playerStats.RecalculateStats();
-
-        // 🔄 Refresca inventario
-        if (inventoryHUD != null)
-            inventoryHUD.Refresh();
+        equippedItem = null;
+        icon.sprite = null;
+        icon.enabled = false;
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -78,11 +74,33 @@ public class EquipmentSlotUI : MonoBehaviour, IPointerClickHandler
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (equippedItem == null) return;
+
         ItemTooltipUI.Instance.Show(equippedItem);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         ItemTooltipUI.Instance.Hide();
+    }
+
+    public void RefreshFromEquipment()
+    {
+        if (EquipmentManager.Instance == null)
+            return;
+
+        ItemData item = EquipmentManager.Instance.GetEquipped(acceptedType);
+
+        if (item != null)
+        {
+            equippedItem = item;
+            icon.sprite = item.icon;
+            icon.enabled = true;
+        }
+        else
+        {
+            equippedItem = null;
+            icon.sprite = null;
+            icon.enabled = false;
+        }
     }
 }

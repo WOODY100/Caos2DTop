@@ -207,9 +207,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootContainer
   loot:
-  - item: {fileID: 11400000, guid: 2b786ad7471f1c54a9d390c880ae5285, type: 2}
+  - item: {fileID: 11400000, guid: 32c7f0923d7ddc44db001675a2d0e125, type: 2}
     amount: 1
-  - item: {fileID: 11400000, guid: 22007d148d777e54f9e7ccdbf90ebd31, type: 2}
+  - item: {fileID: 11400000, guid: c4c81dcd35f0edc44bbd24e7f3243edb, type: 2}
     amount: 1
+  - item: {fileID: 11400000, guid: d36c58bbb8d7f10429b460d8f891a495, type: 2}
+    amount: 2
+  - item: {fileID: 11400000, guid: c6889c8d90cd8de4797c0c43b42cf407, type: 2}
+    amount: 100
   triggerCollider: {fileID: 2027836667860718917}
   visualRoot: {fileID: 4703768854726900013, guid: 7f8eab2433cb9ff4991cf15e50801f50, type: 3}

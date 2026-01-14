@@ -3,39 +3,34 @@ using UnityEngine.InputSystem;
 
 public class PauseInput : MonoBehaviour
 {
-    [SerializeField] private PauseMenuUI pauseMenu;
-
-    private Controls controls;
-
-    private void Awake()
-    {
-        controls = new Controls();
-    }
+    private PauseMenuUI pauseMenu;
 
     private void OnEnable()
     {
-        controls.Enable();
-        controls.Player.Pause.performed += OnPause;
+        InputManager.Instance.Controls.Player.Pause.performed += OnPause;
     }
 
     private void OnDisable()
     {
-        controls.Player.Pause.performed -= OnPause;
-        controls.Disable();
+        InputManager.Instance.Controls.Player.Pause.performed -= OnPause;
     }
 
-    void OnPause(InputAction.CallbackContext ctx)
+    private void OnPause(InputAction.CallbackContext ctx)
     {
-        if (GamePauseManager.Instance.IsPausedBy<InventoryHUD>())
+        if (!ctx.performed)
             return;
-        
+
         if (GamePauseManager.Instance.IsPausedBy<InventoryHUD>())
             return;
 
         if (pauseMenu == null)
         {
-            Debug.LogError("PauseMenuUI no asignado en PauseInput");
-            return;
+            pauseMenu = FindFirstObjectByType<PauseMenuUI>(
+                FindObjectsInactive.Include
+            );
+
+            if (pauseMenu == null)
+                return;
         }
 
         pauseMenu.Toggle();

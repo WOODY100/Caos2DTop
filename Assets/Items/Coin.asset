@@ -16,4 +16,9 @@ MonoBehaviour:
   icon: {fileID: 4321908322816216039, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
   type: 1
   stackable: 0
-  maxStack: 999
+  maxStack: 999999
+  bonusHealth: 0
+  bonusAttack: 0
+  bonusDefense: 0
+  bonusSpeed: 0
+  itemID: Coin

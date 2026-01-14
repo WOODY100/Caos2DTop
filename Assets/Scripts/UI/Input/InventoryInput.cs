@@ -1,27 +1,43 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class InventoryInput : MonoBehaviour
 {
-    [SerializeField] private InventoryHUD inventoryHUD;
-
-    private Controls controls;
-
-    private void Awake()
-    {
-        controls = new Controls();
-
-        controls.UI.ToggleInventory.performed += _ => inventoryHUD.Toggle();
-        controls.UI.Close.performed += _ => inventoryHUD.Close();
-    }
+    private InventoryHUD inventoryHUD;
 
     private void OnEnable()
     {
-        controls.UI.Enable();
+        InputManager.Instance.Controls.Player.Inventory.performed += OnInventory;
     }
 
     private void OnDisable()
     {
-        controls.UI.Disable();
+        InputManager.Instance.Controls.Player.Inventory.performed -= OnInventory;
     }
+
+    private void OnInventory(InputAction.CallbackContext ctx)
+    {
+        if (!ctx.performed)
+            return;
+
+        // 🚫 No permitir inventario en estados inválidos
+        var state = GameStateManager.Instance.CurrentState;
+        if (state == GameState.Transition ||
+            state == GameState.LevelUp ||
+            state == GameState.Dialogue)
+            return;
+
+        if (inventoryHUD == null)
+        {
+            inventoryHUD = FindFirstObjectByType<InventoryHUD>(
+                FindObjectsInactive.Include
+            );
+
+            if (inventoryHUD == null)
+                return;
+        }
+
+        inventoryHUD.Toggle();
+    }
+
 }

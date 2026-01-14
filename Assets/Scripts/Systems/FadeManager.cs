@@ -46,4 +46,11 @@ public class FadeManager : MonoBehaviour
         c.a = to;
         fadeImage.color = c;
     }
+
+    public void SetAlpha(float alpha)
+    {
+        Color c = fadeImage.color;
+        c.a = alpha;
+        fadeImage.color = c;
+    }
 }

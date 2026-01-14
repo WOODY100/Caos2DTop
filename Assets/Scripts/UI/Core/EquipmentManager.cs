@@ -1,7 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour
 {
+    private readonly System.Collections.Generic.Dictionary<ItemType, ItemData> equipped =
+    new System.Collections.Generic.Dictionary<ItemType, ItemData>();
+
     public static EquipmentManager Instance;
     private PlayerStats playerStats;
 
@@ -24,7 +28,11 @@ public class EquipmentManager : MonoBehaviour
         }
 
         Instance = this;
-        playerStats = FindAnyObjectByType<PlayerStats>();
+    }
+
+    public void SetPlayerStats(PlayerStats stats)
+    {
+        playerStats = stats;
     }
 
     public bool Equip(ItemData item)
@@ -36,17 +44,26 @@ public class EquipmentManager : MonoBehaviour
         if (slot == null || !slot.CanEquip(item))
             return false;
 
-        // 🔁 recuperar item anterior
+        // ❌ Si ya está equipado, no volver a equipar
+        if (slot.GetItem() == item)
+            return false;
+
+        // 🔁 quitar del inventario
+        InventoryManager.Instance.RemoveItem(item);
+
+        // 🔁 equipar y recuperar previo
         ItemData previousItem = slot.Equip(item);
 
-        // 🔄 devolver al inventario si existía
+        // 🔥 mantener diccionario sincronizado
+        equipped[item.type] = item;
+
+        // 🔄 devolver el anterior al inventario
         if (previousItem != null)
             InventoryManager.Instance.AddItem(previousItem, 1);
 
         playerStats?.RecalculateStats();
         return true;
     }
-
 
     public void Unequip(ItemType type)
     {
@@ -56,7 +73,10 @@ public class EquipmentManager : MonoBehaviour
         ItemData removedItem = slot.Unequip();
 
         if (removedItem != null)
+        {
+            equipped.Remove(type);
             InventoryManager.Instance.AddItem(removedItem, 1);
+        }
 
         playerStats?.RecalculateStats();
     }
@@ -76,13 +96,13 @@ public class EquipmentManager : MonoBehaviour
     {
         return new ItemData[]
         {
-        helmet?.GetItem(),
-        armor?.GetItem(),
-        legs?.GetItem(),
-        boots?.GetItem(),
-        sword?.GetItem(),
-        necklace?.GetItem(),
-        ring?.GetItem()
+        equipped.GetValueOrDefault(ItemType.Helmet),
+        equipped.GetValueOrDefault(ItemType.Armor),
+        equipped.GetValueOrDefault(ItemType.Legs),
+        equipped.GetValueOrDefault(ItemType.Boots),
+        equipped.GetValueOrDefault(ItemType.Sword),
+        equipped.GetValueOrDefault(ItemType.Necklace),
+        equipped.GetValueOrDefault(ItemType.Ring)
         };
     }
 
@@ -105,5 +125,36 @@ public class EquipmentManager : MonoBehaviour
     {
         return GetSlot(type)?.GetItem();
     }
+
+    public void EquipSilently(ItemData item)
+    {
+        if (item == null || !IsEquipable(item))
+            return;
+
+        EquipmentSlotUI slot = GetSlot(item.type);
+        if (slot == null)
+            return;
+
+        equipped[item.type] = item;
+        slot.Equip(item);
+    }
+
+    public IReadOnlyDictionary<ItemType, ItemData> GetEquippedDictionary()
+    {
+        return equipped;
+    }
+
+    public void ClearAllSlots()
+    {
+        foreach (ItemType type in System.Enum.GetValues(typeof(ItemType)))
+        {
+            EquipmentSlotUI slot = GetSlot(type);
+            if (slot != null)
+                slot.Clear();
+        }
+
+        equipped.Clear();
+    }
+
 
 }

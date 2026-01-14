@@ -85,7 +85,9 @@ MonoBehaviour:
   loot:
   - item: {fileID: 11400000, guid: c6889c8d90cd8de4797c0c43b42cf407, type: 2}
     amount: 3
-  - item: {fileID: 11400000, guid: 22007d148d777e54f9e7ccdbf90ebd31, type: 2}
+  - item: {fileID: 11400000, guid: c4c81dcd35f0edc44bbd24e7f3243edb, type: 2}
+    amount: 1
+  - item: {fileID: 11400000, guid: 32c7f0923d7ddc44db001675a2d0e125, type: 2}
     amount: 1
   triggerCollider: {fileID: 4643535110956991053}
   visualRoot: {fileID: 7602143835890367965}

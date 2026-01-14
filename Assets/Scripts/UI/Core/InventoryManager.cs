@@ -36,7 +36,7 @@ public class InventoryManager : MonoBehaviour
 
     public bool AddItem(ItemData item, int amount)
     {
-        Debug.Log($"[Inventory] Agregado: {item.itemName} x{amount}");
+        //Debug.Log($"[Inventory] Agregado: {item.itemName} x{amount}");
 
         if (item == null || amount <= 0)
             return false;

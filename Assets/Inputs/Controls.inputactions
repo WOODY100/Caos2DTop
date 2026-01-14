@@ -588,7 +588,7 @@
                     "name": "Move",
                     "type": "Value",
                     "id": "3b6a3a89-af47-4190-9e85-673d1f9d77db",
-                    "expectedControlType": "",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -624,6 +624,15 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "7b67ecb4-8aaa-415d-a9e2-138d527ddab7",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Inventory",
+                    "type": "Button",
+                    "id": "dba11852-153d-4800-8971-bd28a9ebb22a",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -826,6 +835,28 @@
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
                     "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "49b4d811-8a3d-40c2-b7e0-40666c0aafc7",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bc882aab-fb8f-4aff-b1d4-f31821553ab4",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Gamepad",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

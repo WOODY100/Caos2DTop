@@ -17,3 +17,8 @@ MonoBehaviour:
   type: 2
   stackable: 0
   maxStack: 1
+  bonusHealth: 0
+  bonusAttack: 0
+  bonusDefense: 0
+  bonusSpeed: 0
+  itemID: Key

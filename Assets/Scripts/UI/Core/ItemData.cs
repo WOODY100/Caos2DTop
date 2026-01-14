@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public enum ItemType
 {
     Consumible,
@@ -31,6 +32,9 @@ public class ItemData : ScriptableObject
     public int bonusAttack;
     public int bonusDefense;
     public float bonusSpeed;
+
+    [Header("Save")]
+    public string itemID;
 
     public int GetStatScore()
     {

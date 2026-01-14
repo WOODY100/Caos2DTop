@@ -48,7 +48,7 @@ public class PlayerExperience : MonoBehaviour
         // 🔔 Avisar al sistema de elecciones
         OnLevelUp?.Invoke(pendingStats, level);
 
-        Debug.Log($"LEVEL {level} → esperando elección");
+        //Debug.Log($"LEVEL {level} → esperando elección");
 
         OnExpChanged?.Invoke();
     }

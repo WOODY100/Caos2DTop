@@ -55,4 +55,14 @@ public class PlayerInteractor : MonoBehaviour
         }
     }
 
+    public void SetPaused()
+    {
+        GameStateManager.Instance.SetState(GameState.Paused);
+    }
+
+    public void SetPlaying()
+    {
+        GameStateManager.Instance.SetState(GameState.Playing);
+    }
+
 }

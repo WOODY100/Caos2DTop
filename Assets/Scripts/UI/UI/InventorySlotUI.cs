@@ -88,9 +88,6 @@ public class InventorySlotUI : MonoBehaviour, IPointerClickHandler, IPointerEnte
         {
             // 🔥 CERRAR TOOLTIP EXPLÍCITAMENTE
             ItemTooltipUI.Instance?.Hide();
-
-            InventoryManager.Instance.RemoveItem(item);
-            Clear();
         }
     }
 

@@ -37,25 +37,18 @@ public class InventoryHUD : MonoBehaviour
     {
         InventoryManager.OnInventoryChanged += RefreshDelayed;
         Refresh();
-
-        GamePauseManager.Instance.RequestPause(this);
     }
 
     private void OnDisable()
     {
         InventoryManager.OnInventoryChanged -= RefreshDelayed;
-
-        if (GamePauseManager.Instance != null)
-            GamePauseManager.Instance.ReleasePause(this);
     }
 
     public void Open()
     {
         if (isOpen) return;
 
-        // 🔒 No abrir inventario durante LevelUp
-        if (GamePauseManager.Instance.IsPausedBy<LevelUpUI>())
-            return;
+        GameStateManager.Instance.SetState(GameState.Inventory);
 
         isOpen = true;
         gameObject.SetActive(true);
@@ -65,28 +58,26 @@ public class InventoryHUD : MonoBehaviour
     {
         if (!isOpen) return;
 
-        ItemTooltipUI.Instance?.Hide(); // 🔥 BLINDAJE
+        ItemTooltipUI.Instance?.Hide();
+
+        GameStateManager.Instance.SetState(GameState.Playing);
 
         isOpen = false;
         gameObject.SetActive(false);
     }
 
-
     public void Toggle()
     {
-        // 🚫 Si intento abrir pero el juego está pausado por otra UI (PauseMenu, LevelUp)
-        if (!isOpen && GamePauseManager.Instance.IsPaused())
-            return;
-
         if (isOpen)
             Close();
         else
             Open();
     }
 
+
     public void Refresh()
     {
-        Debug.Log($"[HUD] Items en inventario: {InventoryManager.Instance.items.Count}");
+        //Debug.Log($"[HUD] Items en inventario: {InventoryManager.Instance.items.Count}");
 
         var inventory = InventoryManager.Instance.items;
 

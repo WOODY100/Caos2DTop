@@ -10,10 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05cfc5bb505c85b46b8f38c85c4440fe, type: 3}
-  m_Name: Anillo
+  m_Name: Dragon_Helmet
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Anillo
-  icon: {fileID: 3929133199111790865, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
-  type: 10
+  itemName: Dragon Helmet
+  icon: {fileID: -2157682245520061201, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
+  type: 4
   stackable: 0
   maxStack: 99
+  bonusHealth: 10
+  bonusAttack: 0
+  bonusDefense: 5
+  bonusSpeed: 0
+  itemID: Dragon_Helmet

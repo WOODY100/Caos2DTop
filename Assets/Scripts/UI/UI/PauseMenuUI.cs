@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuUI : MonoBehaviour
 {
@@ -38,5 +39,29 @@ public class PauseMenuUI : MonoBehaviour
     public void Resume()
     {
         Close();
+    }
+
+    public void Save()
+    {
+        SaveManager.Instance.SaveGame();
+    }
+
+    public void Load()
+    {
+        SaveManager.Instance.LoadGame();
+        Close();
+    }
+
+    public void ExitToMenu()
+    {
+        // 1️⃣ Cambiar estado global
+        if (GameStateManager.Instance != null)
+            GameStateManager.Instance.SetState(GameState.Transition);
+
+        // 2️⃣ Cerrar este menú (evita input fantasma)
+        gameObject.SetActive(false);
+
+        // 3️⃣ Cargar menú principal
+        SceneManager.LoadScene("MainMenu");
     }
 }

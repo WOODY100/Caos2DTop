@@ -28,6 +28,7 @@ public class PlayerStats : MonoBehaviour
 
     private void Awake()
     {
+        EquipmentManager.Instance?.SetPlayerStats(this);
         RecalculateStats();
         currentHealth = maxHealth;
         OnHealthChanged?.Invoke();
