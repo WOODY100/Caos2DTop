@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class ItemTooltipUI : MonoBehaviour
 {
@@ -8,8 +9,10 @@ public class ItemTooltipUI : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private GameObject root;
+    [SerializeField] private Image iconImage;      // 🔹 FALTA ESTO
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text statsText;
+    [SerializeField] private TMP_Text descriptionText;
 
     void Awake()
     {
@@ -35,8 +38,27 @@ public class ItemTooltipUI : MonoBehaviour
         if (item == null)
             return;
 
+        // 🔹 ICONO (CLAVE)
+        if (iconImage != null)
+        {
+            iconImage.sprite = item.icon;
+            iconImage.enabled = item.icon != null;
+            iconImage.color = Color.white;
+        }
+
         nameText.text = item.itemName;
         statsText.text = item.GetTooltipText();
+
+        // DESCRIPCIÓN
+        if (descriptionText != null)
+        {
+            descriptionText.text = string.IsNullOrEmpty(item.description)
+                ? ""
+                : item.description;
+
+            descriptionText.gameObject.SetActive(!string.IsNullOrEmpty(item.description));
+        }
+
 
         root.SetActive(true);
     }

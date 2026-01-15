@@ -24,6 +24,10 @@ public class ItemData : ScriptableObject
     public Sprite icon;
     public ItemType type;
 
+    [Header("Description")]
+    [TextArea(3, 6)]
+    public string description;
+
     public bool stackable;
     public int maxStack = 99;
 

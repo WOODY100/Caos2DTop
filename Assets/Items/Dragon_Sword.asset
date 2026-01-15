@@ -15,6 +15,8 @@ MonoBehaviour:
   itemName: Dragon Sword
   icon: {fileID: 2594068508085724225, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
   type: 8
+  description: "Una espada imbuida con el poder de un drag\xF3n antiguo.\r\nSu filo
+    aumenta el da\xF1o, mientras su empu\xF1adura refuerza la defensa."
   stackable: 0
   maxStack: 99
   bonusHealth: 0

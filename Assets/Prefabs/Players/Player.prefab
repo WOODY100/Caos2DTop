@@ -207,6 +207,8 @@ GameObject:
   - component: {fileID: 8638959624777005313}
   - component: {fileID: 5046018510143290014}
   - component: {fileID: 2061081185094638166}
+  - component: {fileID: 5908335595158227392}
+  - component: {fileID: 2490113099379786509}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -617,6 +619,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed9dfc41db928b84eba48bb70afe85b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InteractInput
+--- !u!114 &5908335595158227392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936183076624203310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ab041fa43488ee45ad9a5d7a64c6ae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPositionSave
+--- !u!114 &2490113099379786509
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936183076624203310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 428207f473689bf47a03b8ca9ca18a23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerStatsSave
 --- !u!1 &6814656865112750080
 GameObject:
   m_ObjectHideFlags: 0

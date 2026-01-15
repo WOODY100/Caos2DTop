@@ -6,15 +6,22 @@ using UnityEngine.SceneManagement;
 
 public class SaveManager : MonoBehaviour
 {
+    public const int MaxSlots = 5;
+    public const int CURRENT_SAVE_VERSION = 1;
+
+    // ======================
+    // WORLD FLAGS
+    // ======================
+    public List<string> worldFlags = new();
+
+    public int CurrentSlot { get; private set; } = -1;
+    public bool IsLoadingFromSave { get; private set; }
+
+
     public bool IsLoading { get; private set; }
     public static SaveManager Instance;
     private string SaveDirectory =>
     Path.Combine(Application.persistentDataPath, "Saves");
-
-    private string SavePath =>
-        Path.Combine(Application.persistentDataPath, "save.json");
-
-    public const int MaxSlots = 5;
 
     private void Awake()
     {
@@ -45,8 +52,13 @@ public class SaveManager : MonoBehaviour
 
     public void SaveGameToSlot(int slot)
     {
+        CurrentSlot = slot;
+
         SaveData data = BuildSaveData();
         if (data == null) return;
+
+        // 🔹 VERSIONADO
+        data.saveVersion = CURRENT_SAVE_VERSION;
 
         // -------------------------
         // METADATA
@@ -64,21 +76,9 @@ public class SaveManager : MonoBehaviour
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetSavePath(slot), json);
-    }
 
-
-    public bool HasSave()
-    {
-        return File.Exists(SavePath);
-    }
-
-    public void DeleteSave()
-    {
-        if (File.Exists(SavePath))
-        {
-            File.Delete(SavePath);
-            //Debug.Log("Archivo de guardado eliminado");
-        }
+        if (SaveFeedbackUI.Instance != null)
+            SaveFeedbackUI.Instance.Show("Juego guardado...");
     }
 
     public void DeleteSave(int slot)
@@ -88,91 +88,18 @@ public class SaveManager : MonoBehaviour
         if (File.Exists(path))
         {
             File.Delete(path);
-            Debug.Log($"Save del slot {slot} eliminado");
+            //Debug.Log($"Save del slot {slot} eliminado");
         }
-    }
-
-
-    public void SaveGame()
-    {
-        SaveData data = new SaveData();
-
-        // -------------------------
-        // SCENE
-        // -------------------------
-        data.sceneName = SceneManager.GetActiveScene().name;
-
-        // -------------------------
-        // PLAYER POSITION
-        // -------------------------
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            data.playerPosition = player.transform.position;
-
-        // -------------------------
-        // INVENTORY
-        // -------------------------
-        data.inventoryItemIDs.Clear();
-
-        foreach (var item in InventoryManager.Instance.items)
-        {
-            if (item != null)
-                data.inventoryItemIDs.Add(item.itemID);
-        }
-
-        // -------------------------
-        // EQUIPMENT
-        // -------------------------
-        data.equippedItems.Clear();
-
-        foreach (var pair in EquipmentManager.Instance.GetEquippedDictionary())
-        {
-            if (pair.Value == null) continue;
-
-            data.equippedItems.Add(new EquippedItemData
-            {
-                slotType = pair.Key,
-                itemID = pair.Value.itemID
-            });
-        }
-
-        // -------------------------
-        // CURRENCY
-        // -------------------------
-        data.coins = InventoryManager.Instance.GetCoins();
-        data.keys = InventoryManager.Instance.GetKeys();
-
-        // -------------------------
-        // WRITE FILE
-        // -------------------------
-        string json = JsonUtility.ToJson(data, true);
-        File.WriteAllText(SavePath, json);
     }
 
     // =========================
     // LOAD
     // =========================
-    public void LoadGame()
-    {
-        if (IsLoading)
-            return;
-
-        if (!File.Exists(SavePath))
-        {
-            Debug.LogWarning("No existe archivo de guardado");
-            return;
-        }
-
-        IsLoading = true;
-
-        string json = File.ReadAllText(SavePath);
-        SaveData data = JsonUtility.FromJson<SaveData>(json);
-
-        StartCoroutine(LoadRoutine(data));
-    }
-
     public void LoadGame(int slot)
     {
+        CurrentSlot = slot;
+        IsLoadingFromSave = true;
+
         if (IsLoading)
             return;
 
@@ -189,129 +116,79 @@ public class SaveManager : MonoBehaviour
         string json = File.ReadAllText(path);
         SaveData data = JsonUtility.FromJson<SaveData>(json);
 
+        // 🔹 VERSIONADO
+        if (data.saveVersion < CURRENT_SAVE_VERSION)
+        {
+            UpgradeSaveData(data);
+
+            // 🔹 Reescribir save actualizado
+            string upgradedJson = JsonUtility.ToJson(data, true);
+            File.WriteAllText(path, upgradedJson);
+        }
+
         StartCoroutine(LoadRoutine(data));
     }
-
 
     private IEnumerator LoadRoutine(SaveData data)
     {
         // 🔒 Bloquear gameplay
-        if (GameStateManager.Instance != null)
-            GameStateManager.Instance.SetState(GameState.Transition);
+        GameStateManager.Instance?.SetState(GameState.Transition);
 
-        // 🌑 FADE OUT
-        if (FadeManager.Instance != null)
-            yield return FadeManager.Instance.FadeOut();
+        // 🌑 Fade Out
+        yield return FadeManager.Instance.FadeOut();
 
-        // -------------------------
-        // LOAD SCENE
-        // -------------------------
+        // 🗺️ Cargar escena (SIN frame intermedio)
         yield return SceneManager.LoadSceneAsync(data.sceneName);
-        yield return null;
 
-        // -------------------------
-        // PLAYER POSITION + CAMERA TELEPORT
-        // -------------------------
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
+        // ⛔ Cortar seguimiento ANTES de cualquier cálculo
+        CameraTransitionController.Instance?.DisableFollow();
+
+        // 💾 Aplicar datos (posición / spawn / stats)
+        foreach (var saveable in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
         {
-            Vector3 oldPos = player.transform.position;
-            Vector3 newPos = data.playerPosition;
-
-            player.transform.position = newPos;
-
-            if (CameraTransitionController.Instance != null)
-                CameraTransitionController.Instance.NotifyTeleport(oldPos, newPos);
+            if (saveable is ISaveable s)
+                s.LoadData(data);
         }
 
-        // -------------------------
-        // INVENTORY (PRIMERO)
-        // -------------------------
-        InventoryManager.Instance.items.Clear();
+        // 🔔 Notificar teleport FINAL
+        var player = FindFirstObjectByType<PlayerController>();
+        CameraTransitionController.Instance?.NotifyTeleport(
+            Vector3.zero,
+            player.transform.position
+        );
 
-        foreach (string id in data.inventoryItemIDs)
-        {
-            ItemData item = ItemDatabase.Instance.GetItem(id);
-            if (item != null)
-                InventoryManager.Instance.AddItem(item, 1);
-        }
+        // ✅ Activar seguimiento YA correcto
+        CameraTransitionController.Instance?.EnableFollow();
 
-        // -------------------------
-        // EQUIPMENT (DESPUÉS)
-        // -------------------------
-        EquipmentManager.Instance.ClearAllSlots();
+        // 🔄 Recalcular stats
+        FindFirstObjectByType<PlayerStats>()?.RecalculateStats();
 
-        foreach (var equipped in data.equippedItems)
-        {
-            ItemData item = ItemDatabase.Instance.GetItem(equipped.itemID);
-            if (item != null)
-                EquipmentManager.Instance.EquipSilently(item);
-        }
+        // 🖥️ UI
+        FindFirstObjectByType<InventoryHUD>()?.Refresh();
 
-        // -------------------------
-        // RECALCULAR STATS (UNA VEZ)
-        // -------------------------
-        PlayerStats stats = Object.FindFirstObjectByType<PlayerStats>();
-        if (stats != null)
-            stats.RecalculateStats();
+        // 🌕 Fade In
+        yield return FadeManager.Instance.FadeIn();
 
-        // -------------------------
-        // REFRESH UI
-        // -------------------------
-        InventoryHUD hud = Object.FindFirstObjectByType<InventoryHUD>();
-        if (hud != null)
-            hud.Refresh();
+        // ▶ Gameplay
+        GameStateManager.Instance?.SetState(GameState.Playing);
 
-        // 🌕 FADE IN
-
-        if (FadeManager.Instance != null)
-        {
-            FadeManager.Instance.SetAlpha(1f); // asegura negro
-            yield return null;                 // deja renderizar un frame
-            yield return FadeManager.Instance.FadeIn();
-        }
-
-        // ▶ RESUME GAMEPLAY
-        if (GameStateManager.Instance != null)
-            GameStateManager.Instance.SetState(GameState.Playing);
-
+        IsLoadingFromSave = false;
         IsLoading = false;
     }
 
+
     private SaveData BuildSaveData()
     {
-        if (InventoryManager.Instance == null)
+        SaveData data = new SaveData
         {
-            Debug.LogError("BuildSaveData llamado fuera de gameplay");
-            return null;
-        }
+            sceneName = SceneManager.GetActiveScene().name
+        };
 
-        SaveData data = new SaveData();
-
-        data.sceneName = SceneManager.GetActiveScene().name;
-
-        GameObject player = GameObject.FindGameObjectWithTag("Player");
-        if (player != null)
-            data.playerPosition = player.transform.position;
-
-        data.inventoryItemIDs.Clear();
-        foreach (var item in InventoryManager.Instance.items)
-            if (item != null)
-                data.inventoryItemIDs.Add(item.itemID);
-
-        data.equippedItems.Clear();
-        foreach (var pair in EquipmentManager.Instance.GetEquippedDictionary())
+        foreach (var saveable in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
         {
-            if (pair.Value == null) continue;
-            data.equippedItems.Add(new EquippedItemData
-            {
-                slotType = pair.Key,
-                itemID = pair.Value.itemID
-            });
+            if (saveable is ISaveable s)
+                s.SaveData(data);
         }
-
-        data.coins = InventoryManager.Instance.GetCoins();
-        data.keys = InventoryManager.Instance.GetKeys();
 
         return data;
     }
@@ -397,15 +274,32 @@ public class SaveManager : MonoBehaviour
 
     public void CreateNewGame(int slot)
     {
+        CurrentSlot = slot;
+
         // Crear un SaveData LIMPIO (estado inicial)
         SaveData data = new SaveData
         {
-            sceneName = "World", // ⚠️ tu escena inicial
+            saveVersion = CURRENT_SAVE_VERSION,
+
+            sceneName = "World",
             playerPosition = Vector3.zero,
-            inventoryItemIDs = new List<string>(),
-            equippedItems = new List<EquippedItemData>(),
+
+            // 🔹 NIVEL
+            playerLevel = 1,
+            playerCurrentExp = 0,
+            playerExpToNextLevel = 100,
+
+            // 🔹 BASE STATS INICIALES (CLAVE)
+            baseHealth = 100,
+            baseAttack = 10,
+            baseDefense = 5,
+            baseSpeed = 5f,
+            currentHealth = 100,
+
+            inventoryItemIDs = new(),
+            equippedItems = new(),
             coins = 0,
-            keys = 0,
+
             meta = new SaveMetaData
             {
                 saveName = $"Partida {slot + 1}",
@@ -417,8 +311,46 @@ public class SaveManager : MonoBehaviour
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetSavePath(slot), json);
+        SpawnManager.Instance?.SetSpawn("start");
 
-        // Cargar directamente esa partida nueva
         LoadGame(slot);
+        
+        PlayerStats stats = FindFirstObjectByType<PlayerStats>();
+        stats?.InitializeNewGame();
     }
+
+    public void SaveCurrentGame()
+    {
+        if (CurrentSlot < 0)
+            return;
+
+        SaveGameToSlot(CurrentSlot);
+    }
+
+    private void UpgradeSaveData(SaveData data)
+    {
+        // 🟡 EJEMPLO: versión 0 → versión 1
+        if (data.saveVersion == 0)
+        {
+            // Valores por defecto para stats base
+            if (data.baseHealth <= 0) data.baseHealth = 100;
+            if (data.baseAttack <= 0) data.baseAttack = 10;
+            if (data.baseDefense <= 0) data.baseDefense = 5;
+            if (data.baseSpeed <= 0) data.baseSpeed = 5f;
+
+            data.saveVersion = 1;
+        }
+
+        if (data.saveVersion == 1)
+        {
+            if (data.currentHealth <= 0)
+                data.currentHealth = data.baseHealth;
+
+            data.saveVersion = 2;
+        }
+
+        // 🔮 Futuras versiones aquí
+        // if (data.saveVersion == 1) { ... data.saveVersion = 2; }
+    }
+
 }

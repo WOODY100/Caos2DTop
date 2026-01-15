@@ -18,13 +18,11 @@ public class MainMenuUI : MonoBehaviour
             return;
         }
 
-        SaveManager.Instance.LoadGame();
+        SaveManager.Instance.LoadLastSave();
     }
 
     public void NewGame()
     {
-        SaveManager.Instance.DeleteSave();
-
         GameStateManager.Instance.SetState(GameState.Transition);
 
         SceneManager.LoadScene("World");

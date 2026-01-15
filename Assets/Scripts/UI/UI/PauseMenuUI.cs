@@ -1,9 +1,11 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class PauseMenuUI : MonoBehaviour
 {
     private bool isOpen;
+    private bool isExiting;
 
     private void Awake()
     {
@@ -12,6 +14,8 @@ public class PauseMenuUI : MonoBehaviour
 
     public void Toggle()
     {
+        if (isExiting) return;
+
         if (isOpen)
             Close();
         else
@@ -20,7 +24,11 @@ public class PauseMenuUI : MonoBehaviour
 
     public void Open()
     {
-        if (isOpen) return;
+        if (isOpen || isExiting) return;
+
+        if (UIModalManager.Instance != null &&
+        !UIModalManager.Instance.RequestOpen(this))
+            return;
 
         isOpen = true;
         gameObject.SetActive(true);
@@ -29,11 +37,15 @@ public class PauseMenuUI : MonoBehaviour
 
     public void Close()
     {
-        if (!isOpen) return;
+        if (!isOpen || isExiting) return;
 
         isOpen = false;
         gameObject.SetActive(false);
         GamePauseManager.Instance.ReleasePause(this);
+        
+        if (UIModalManager.Instance != null)
+            UIModalManager.Instance.Close(this);
+
     }
 
     public void Resume()
@@ -41,27 +53,54 @@ public class PauseMenuUI : MonoBehaviour
         Close();
     }
 
-    public void Save()
+    public void SaveAndExit()
     {
-        SaveManager.Instance.SaveGame();
+        StartCoroutine(SaveAndExitRoutine());
     }
 
-    public void Load()
+    private IEnumerator SaveAndExitRoutine()
     {
-        SaveManager.Instance.LoadGame();
-        Close();
-    }
+        isExiting = true; // 🔒 BLOQUEAR INPUT DEL MENÚ
 
-    public void ExitToMenu()
-    {
-        // 1️⃣ Cambiar estado global
+        // 1️⃣ Guardar
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.SaveCurrentGame();
+
+        // 2️⃣ Esperar feedback visual
+        if (SaveFeedbackUI.Instance != null)
+        {
+            yield return new WaitForSecondsRealtime(
+                SaveFeedbackUI.Instance.TotalDuration
+            );
+        }
+
+        // 3️⃣ Liberar pausa
+        if (GamePauseManager.Instance != null)
+            GamePauseManager.Instance.ReleasePause(this);
+
+        // 4️⃣ Cambiar estado global
         if (GameStateManager.Instance != null)
             GameStateManager.Instance.SetState(GameState.Transition);
 
-        // 2️⃣ Cerrar este menú (evita input fantasma)
+        // 5️⃣ Ocultar menú
         gameObject.SetActive(false);
 
-        // 3️⃣ Cargar menú principal
+        // 🔥 LIMPIEZA GLOBAL (CLAVE)
+        if (UIModalManager.Instance != null)
+            UIModalManager.Instance.ResetModal();
+
+        if (GamePauseManager.Instance != null)
+            GamePauseManager.Instance.ResetAllPauses();
+
+        // 6️⃣ Cambiar escena
         SceneManager.LoadScene("MainMenu");
+
     }
+
+    public void Save()
+    {
+        if (SaveManager.Instance != null)
+            SaveManager.Instance.SaveCurrentGame();
+    }
+
 }

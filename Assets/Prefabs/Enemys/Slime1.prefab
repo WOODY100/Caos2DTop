@@ -508,6 +508,7 @@ GameObject:
   - component: {fileID: 5981635511221749004}
   - component: {fileID: 1864832998915331497}
   - component: {fileID: 2186597309801741429}
+  - component: {fileID: 6394646191135262465}
   m_Layer: 0
   m_Name: Slime1
   m_TagString: Enemy
@@ -904,6 +905,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyLootDrop
   lootPrefab: {fileID: 5221481940893104793, guid: eb315fec70189df4795002e24745d8f2, type: 3}
+--- !u!114 &6394646191135262465
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7760542733430675899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff524b5bdb673f54c8bd2bdfe59e3414, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyWorldState
+  enemyID: enemy_slime_01
 --- !u!1 &8563857501573140086
 GameObject:
   m_ObjectHideFlags: 0

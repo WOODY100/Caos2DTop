@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class EquipmentManager : MonoBehaviour
+public class EquipmentManager : MonoBehaviour, ISaveable
 {
     private readonly System.Collections.Generic.Dictionary<ItemType, ItemData> equipped =
     new System.Collections.Generic.Dictionary<ItemType, ItemData>();
@@ -156,5 +156,32 @@ public class EquipmentManager : MonoBehaviour
         equipped.Clear();
     }
 
+    public void SaveData(SaveData data)
+    {
+        data.equippedItems.Clear();
+
+        foreach (var pair in equipped)
+        {
+            if (pair.Value == null) continue;
+
+            data.equippedItems.Add(new EquippedItemData
+            {
+                slotType = pair.Key,
+                itemID = pair.Value.itemID
+            });
+        }
+    }
+
+    public void LoadData(SaveData data)
+    {
+        ClearAllSlots();
+
+        foreach (var equippedItem in data.equippedItems)
+        {
+            ItemData item = ItemDatabase.Instance.GetItem(equippedItem.itemID);
+            if (item != null)
+                EquipSilently(item);
+        }
+    }
 
 }

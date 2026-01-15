@@ -27,13 +27,8 @@ public class SaveSlotDebugInput : MonoBehaviour
         // Detectar qué tecla fue presionada
         if (context.control == Keyboard.current.f5Key)
         {
-            SaveManager.Instance.SaveGameToSlot(0);
-            Debug.Log("Guardado en SLOT 0 (F5)");
-        }
-        else if (context.control == Keyboard.current.f6Key)
-        {
-            SaveManager.Instance.SaveGameToSlot(1);
-            Debug.Log("Guardado en SLOT 1 (F6)");
+            SaveManager.Instance.SaveCurrentGame();
+            Debug.Log("Guardado con (F5)");
         }
     }
 }

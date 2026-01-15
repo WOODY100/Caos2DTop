@@ -1,17 +1,25 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LootContainer : MonoBehaviour, IInteractable
 {
+    public event Action OnLootEmptied;
+
     [Header("Loot")]
     [SerializeField] private List<LootEntry> loot = new();
 
     [Header("State")]
     public bool IsOpened { get; private set; }
+    protected void MarkOpened()
+    {
+        IsOpened = true;
+    }
 
     [Header("Components")]
     [SerializeField] private Collider2D triggerCollider;
     [SerializeField] private GameObject visualRoot;
+
 
     void Awake()
     {
@@ -64,6 +72,7 @@ public class LootContainer : MonoBehaviour, IInteractable
         {
             IsOpened = true;
             OnLootEmpty();
+            OnLootEmptied?.Invoke();
         }
     }
 

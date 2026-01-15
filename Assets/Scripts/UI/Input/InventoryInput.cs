@@ -37,6 +37,11 @@ public class InventoryInput : MonoBehaviour
                 return;
         }
 
+        if (UIModalManager.Instance != null &&
+            UIModalManager.Instance.HasOpenModal() &&
+            !UIModalManager.Instance.IsOpenBy<InventoryHUD>())
+            return;
+
         inventoryHUD.Toggle();
     }
 

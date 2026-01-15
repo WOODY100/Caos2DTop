@@ -5,7 +5,6 @@ public class PlayerSpawnResolver : MonoBehaviour
 {
     private IEnumerator Start()
     {
-        // 1️⃣ Esperar 1 frame para que Cinemachine y la escena estén listos
         yield return null;
 
         if (SpawnManager.Instance == null)
@@ -15,10 +14,11 @@ public class PlayerSpawnResolver : MonoBehaviour
         if (string.IsNullOrEmpty(spawnID))
             yield break;
 
-        // 2️⃣ Guardar posición previa (importante para Cinemachine)
+        // 🔹 LIMPIAR SPAWN ANTES DE USARLO
+        SpawnManager.Instance.nextSpawnID = null;
+
         Vector3 oldPosition = transform.position;
 
-        // 3️⃣ Buscar el SpawnPoint correcto
         SpawnPoint[] points = Object.FindObjectsByType<SpawnPoint>(
             FindObjectsSortMode.None
         );
@@ -32,7 +32,6 @@ public class PlayerSpawnResolver : MonoBehaviour
             }
         }
 
-        // 4️⃣ Notificar a Cinemachine que fue un TELEPORT
         if (CameraTransitionController.Instance != null)
         {
             CameraTransitionController.Instance.NotifyTeleport(
@@ -41,12 +40,10 @@ public class PlayerSpawnResolver : MonoBehaviour
             );
         }
 
-        // 5️⃣ Fade In DESPUÉS de que TODO está en su lugar
         if (FadeManager.Instance != null)
             yield return FadeManager.Instance.FadeIn();
 
-        // 6️⃣ Reactivar input del jugador
-        PlayerController pc = GetComponent<PlayerController>();
-        pc?.SetInputEnabled(true);
+        PlayerController pc2 = GetComponent<PlayerController>();
+        pc2?.SetInputEnabled(true);
     }
 }

@@ -63,5 +63,9 @@ public class GamePauseManager : MonoBehaviour
         return false;
     }
 
-
+    public void ResetAllPauses()
+    {
+        pauseRequests.Clear();
+        UpdateState();
+    }
 }

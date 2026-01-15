@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-public class PlayerExperience : MonoBehaviour
+public class PlayerExperience : MonoBehaviour, ISaveable
 {
     [Header("Level")]
     public int level = 1;
@@ -18,9 +18,6 @@ public class PlayerExperience : MonoBehaviour
     public event Action<LevelStats, int> OnLevelUp;
 
     private PlayerStats stats;
-
-    // 🔹 Stats pendientes de aplicar
-    private LevelStats pendingStats;
 
     private void Awake()
     {
@@ -43,15 +40,12 @@ public class PlayerExperience : MonoBehaviour
 
         expToNextLevel = Mathf.RoundToInt(expToNextLevel * expMultiplier);
 
-        int index = level - 2;
-
-        // 🔔 Avisar al sistema de elecciones
-        OnLevelUp?.Invoke(pendingStats, level);
-
-        //Debug.Log($"LEVEL {level} → esperando elección");
+        // 🔔 Avisar SOLO para mostrar UI
+        OnLevelUp?.Invoke(null, level);
 
         OnExpChanged?.Invoke();
     }
+
 
     // 🔹 ESTE método se llamará cuando el jugador elija
     public void ApplyChosenStats(LevelStats chosenStats)
@@ -65,7 +59,25 @@ public class PlayerExperience : MonoBehaviour
 
         stats.RecalculateStats();
         stats.currentHealth = stats.maxHealth;
-
-        pendingStats = null;
     }
+
+    // ===============================
+    // SAVE/LOAD
+    // ===============================
+    public void SaveData(SaveData data)
+    {
+        data.playerLevel = level;
+        data.playerCurrentExp = currentExp;
+        data.playerExpToNextLevel = expToNextLevel;
+    }
+
+    public void LoadData(SaveData data)
+    {
+        level = data.playerLevel;
+        currentExp = data.playerCurrentExp;
+        expToNextLevel = data.playerExpToNextLevel;
+
+        OnExpChanged?.Invoke();
+    }
+
 }

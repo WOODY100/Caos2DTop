@@ -48,6 +48,10 @@ public class InventoryHUD : MonoBehaviour
     {
         if (isOpen) return;
 
+        if (UIModalManager.Instance != null &&
+        !UIModalManager.Instance.RequestOpen(this))
+            return;
+
         GameStateManager.Instance.SetState(GameState.Inventory);
 
         isOpen = true;
@@ -64,6 +68,9 @@ public class InventoryHUD : MonoBehaviour
 
         isOpen = false;
         gameObject.SetActive(false);
+
+        if (UIModalManager.Instance != null)
+            UIModalManager.Instance.Close(this);
     }
 
     public void Toggle()

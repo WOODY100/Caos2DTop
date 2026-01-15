@@ -58,6 +58,8 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        GetComponent<EnemyWorldState>()?.MarkAsDead();
+
         if (spriteRenderer != null)
         {
             spriteRenderer.sortingOrder = 3;

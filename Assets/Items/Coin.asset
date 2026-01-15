@@ -15,6 +15,10 @@ MonoBehaviour:
   itemName: Coin
   icon: {fileID: 4321908322816216039, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
   type: 1
+  description: 'Monedas comunes usadas en todo el reino.
+
+    Sirven para comerciar
+    con mercaderes y pagar servicios.'
   stackable: 0
   maxStack: 999999
   bonusHealth: 0

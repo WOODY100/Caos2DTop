@@ -2,7 +2,7 @@
 using UnityEngine;
 using System;
 
-public class InventoryManager : MonoBehaviour
+public class InventoryManager : MonoBehaviour, ISaveable
 {
     public static InventoryManager Instance;
     public static event Action OnInventoryChanged;
@@ -16,7 +16,6 @@ public class InventoryManager : MonoBehaviour
 
     [Header("Currency")]
     public int coins;
-    public int keys;
 
     private void Awake()
     {
@@ -29,11 +28,9 @@ public class InventoryManager : MonoBehaviour
         Instance = this;
     }
 
-
     // ===============================
     // ITEM MANAGEMENT
     // ===============================
-
     public bool AddItem(ItemData item, int amount)
     {
         //Debug.Log($"[Inventory] Agregado: {item.itemName} x{amount}");
@@ -49,10 +46,19 @@ public class InventoryManager : MonoBehaviour
             return true;
         }
 
-        // 🗝️ Llaves
+        // 🗝️ Llaves (NUEVO SISTEMA)
         if (item.type == ItemType.Llave)
         {
-            keys += amount;
+            // 👉 Agregar como ítem normal (stackeable)
+            if (items.Count + amount > inventorySize)
+            {
+                Debug.Log("Inventario lleno (no hay espacio suficiente para llaves)");
+                return false;
+            }
+
+            for (int i = 0; i < amount; i++)
+                items.Add(item);
+
             OnInventoryChanged?.Invoke();
             return true;
         }
@@ -75,16 +81,36 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
+    public bool RemoveItem(ItemData item, int amount)
+    {
+        if (item == null || amount <= 0)
+            return false;
+
+        int removed = 0;
+
+        for (int i = items.Count - 1; i >= 0 && removed < amount; i--)
+        {
+            if (items[i].itemID == item.itemID)
+            {
+                items.RemoveAt(i);
+                removed++;
+            }
+        }
+
+        if (removed < amount)
+            return false;
+
+        OnInventoryChanged?.Invoke();
+        return true;
+    }
 
     public void RemoveItem(ItemData item)
     {
-        if (items.Contains(item))
-            items.Remove(item);
-        OnInventoryChanged?.Invoke();
+        RemoveItem(item, 1);
     }
 
+
     public int GetCoins() => coins;
-    public int GetKeys() => keys;
 
     public int GetAmount(ItemData item)
     {
@@ -94,5 +120,41 @@ public class InventoryManager : MonoBehaviour
             return amount;
 
         return 0;
+    }
+
+    // ===============================
+    // SAVE / LOAD
+    // =============================
+    public void SaveData(SaveData data)
+    {
+        data.inventoryItemIDs.Clear();
+
+        foreach (var item in items)
+        {
+            if (item != null)
+                data.inventoryItemIDs.Add(item.itemID);
+        }
+
+        data.coins = coins;
+    }
+
+    public void LoadData(SaveData data)
+    {
+        items.Clear();
+        coins = data.coins;
+
+        foreach (string id in data.inventoryItemIDs)
+        {
+            ItemData item = ItemDatabase.Instance.GetItem(id);
+            if (item != null)
+                AddItem(item, 1);
+        }
+
+        OnInventoryChanged?.Invoke();
+    }
+
+    public bool HasItem(ItemData item)
+    {
+        return items.Exists(i => i.itemID == item.itemID);
     }
 }

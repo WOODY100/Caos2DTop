@@ -8,7 +8,7 @@ public class CameraTransitionController : MonoBehaviour
     private CinemachineCamera vcam;
     private Transform followTarget;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance != null)
         {
@@ -17,7 +17,6 @@ public class CameraTransitionController : MonoBehaviour
         }
 
         Instance = this;
-
         CacheCamera();
     }
 
@@ -26,18 +25,30 @@ public class CameraTransitionController : MonoBehaviour
         if (vcam == null)
             vcam = FindFirstObjectByType<CinemachineCamera>();
 
-        if (vcam != null)
+        if (vcam != null && followTarget == null)
             followTarget = vcam.Follow;
     }
 
-    /// <summary>
-    /// Notifica a Cinemachine que el target fue teletransportado
-    /// </summary>
+    // ⛔ Evita que Cinemachine calcule movimiento
+    public void DisableFollow()
+    {
+        CacheCamera();
+        if (vcam != null)
+            vcam.Follow = null;
+    }
+
+    // ✅ Activa seguimiento SOLO cuando ya todo está listo
+    public void EnableFollow()
+    {
+        CacheCamera();
+        if (vcam != null && followTarget != null)
+            vcam.Follow = followTarget;
+    }
+
+    // 🔔 Teleport limpio
     public void NotifyTeleport(Vector3 oldPos, Vector3 newPos)
     {
-        if (vcam == null || followTarget == null)
-            CacheCamera();
-
+        CacheCamera();
         if (vcam == null || followTarget == null)
             return;
 

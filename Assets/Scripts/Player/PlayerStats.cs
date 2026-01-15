@@ -1,8 +1,11 @@
 ﻿using System;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    [HideInInspector] public bool healthLoadedFromSave;
+
     public static event Action OnStatsChanged;
     public event Action OnHealthChanged;
 
@@ -29,9 +32,11 @@ public class PlayerStats : MonoBehaviour
     private void Awake()
     {
         EquipmentManager.Instance?.SetPlayerStats(this);
-        RecalculateStats();
-        currentHealth = maxHealth;
-        OnHealthChanged?.Invoke();
+
+        // ⚠️ NO inicializar stats aquí
+        // Esto se hará:
+        // - en partida nueva
+        // - o después de LoadData()
     }
 
     public void RecalculateStats()
@@ -57,7 +62,12 @@ public class PlayerStats : MonoBehaviour
         }
 
         // 🧠 Ajuste inteligente de vida actual
-        if (oldMaxHealth > 0)
+        if (healthLoadedFromSave)
+        {
+            currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+            healthLoadedFromSave = false;
+        }
+        else if (oldMaxHealth > 0)
         {
             float percent = (float)currentHealth / oldMaxHealth;
             currentHealth = Mathf.RoundToInt(maxHealth * percent);
@@ -67,9 +77,14 @@ public class PlayerStats : MonoBehaviour
             currentHealth = maxHealth;
         }
 
+
         // 🔔 NOTIFICAR CAMBIOS
         OnStatsChanged?.Invoke();
         OnHealthChanged?.Invoke(); // ⬅️ ESTA LÍNEA ES LA CLAVE
+
+        Debug.Log(
+    $"[RECALC] FinalStats -> MaxHP:{maxHealth} ATK:{attack} DEF:{defense} SPD:{speed}"
+);
     }
 
     public void TakeDamage(int amount)
@@ -89,6 +104,13 @@ public class PlayerStats : MonoBehaviour
     {
         currentHealth += amount;
         currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        OnHealthChanged?.Invoke();
+    }
+
+    public void InitializeNewGame()
+    {
+        RecalculateStats();
+        currentHealth = maxHealth;
         OnHealthChanged?.Invoke();
     }
 }
