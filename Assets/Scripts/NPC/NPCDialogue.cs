@@ -1,13 +1,22 @@
 ﻿using UnityEngine;
 
+[System.Serializable]
+public class DialogueLine
+{
+    [TextArea(2, 5)]
+    public string text;
+
+    [Header("Optional WorldState")]
+    public string flagOnShow;
+}
+
 public class NPCDialogue : MonoBehaviour
 {
     [System.Serializable]
     public class DialogueEntry
     {
         public string requiredFlag;
-        [TextArea(2, 5)]
-        public string[] lines;
+        public DialogueLine[] lines;
     }
 
     [SerializeField] private DialogueEntry[] dialogues;

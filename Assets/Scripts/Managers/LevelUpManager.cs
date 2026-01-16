@@ -77,15 +77,21 @@ public class LevelUpManager : MonoBehaviour
             },
             new LevelUpOption
             {
-                title = "Ataque +5",
+                title = "Ataque +4",
                 description = "Aumenta el daño",
-                attack = 5
+                attack = 4
             },
             new LevelUpOption
             {
-                title = "Velocidad +0.5",
+                title = "Defensa +3",
+                description = "Aumenta la defensa",
+                defense = 3
+            },
+            new LevelUpOption
+            {
+                title = "Velocidad +0.4",
                 description = "Te mueves más rápido",
-                speed = 0.5f
+                speed = 0.4f
             }
         };
     }

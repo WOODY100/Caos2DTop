@@ -4,6 +4,7 @@ public class ChestLootContainer : LootContainer
 {
     protected override void OnLootEmpty()
     {
+        GetComponent<ChestWorldStateAction>()?.Execute();
         LootUI.Instance?.Close();
 
         // ❌ NO destruir

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4643535110956991053}
   - component: {fileID: 5221481940893104793}
   m_Layer: 0
-  m_Name: Loot_Slime1
+  m_Name: Loot_Slime2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LootContainer
   loot:
   - item: {fileID: 11400000, guid: c6889c8d90cd8de4797c0c43b42cf407, type: 2}
-    amount: 5
+    amount: 3
   triggerCollider: {fileID: 4643535110956991053}
   visualRoot: {fileID: 7602143835890367965}
 --- !u!1 &7602143835890367965

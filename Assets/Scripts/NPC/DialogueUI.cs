@@ -11,7 +11,7 @@ public class DialogueUI : MonoBehaviour
     [SerializeField] private TMP_Text speakerNameText; // 🔹 NUEVO
     [SerializeField] private TMP_Text dialogueText;
 
-    private string[] currentLines;
+    private DialogueLine[] currentLines;
     private int currentIndex;
     private bool isOpen;
 
@@ -39,7 +39,7 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    public void Show(string speakerName, string[] lines)
+    public void Show(string speakerName, DialogueLine[] lines)
     {
         if (lines == null || lines.Length == 0)
             return;
@@ -50,11 +50,22 @@ public class DialogueUI : MonoBehaviour
         currentLines = lines;
         currentIndex = 0;
 
-        dialogueText.text = currentLines[currentIndex];
+        ShowLine();
         root.SetActive(true);
         isOpen = true;
 
         GameStateManager.Instance?.SetState(GameState.Dialogue);
+    }
+
+    private void ShowLine()
+    {
+        var line = currentLines[currentIndex];
+        dialogueText.text = line.text;
+
+        if (!string.IsNullOrEmpty(line.flagOnShow))
+        {
+            WorldStateManager.Instance.SetFlag(line.flagOnShow);
+        }
     }
 
     private void NextLine()
@@ -67,7 +78,7 @@ public class DialogueUI : MonoBehaviour
             return;
         }
 
-        dialogueText.text = currentLines[currentIndex];
+        ShowLine();
     }
 
     private void Close()

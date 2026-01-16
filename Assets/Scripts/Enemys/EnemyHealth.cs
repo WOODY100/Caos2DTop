@@ -58,6 +58,7 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        GetComponent<EnemyWorldStateAction>()?.ExecuteOnDeath();
         GetComponent<EnemyWorldState>()?.MarkAsDead();
 
         if (spriteRenderer != null)
