@@ -81,10 +81,6 @@ public class PlayerStats : MonoBehaviour
         // 🔔 NOTIFICAR CAMBIOS
         OnStatsChanged?.Invoke();
         OnHealthChanged?.Invoke(); // ⬅️ ESTA LÍNEA ES LA CLAVE
-
-        Debug.Log(
-    $"[RECALC] FinalStats -> MaxHP:{maxHealth} ATK:{attack} DEF:{defense} SPD:{speed}"
-);
     }
 
     public void TakeDamage(int amount)

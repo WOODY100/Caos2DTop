@@ -36,6 +36,10 @@ public class SaveData
     public List<string> openedChests = new();
     public List<string> deadEnemies = new();
 
+    //QUESTS
+    [Header("Quests")]
+    public List<string> completedQuestIDs = new();
+
 
     public SaveMetaData meta;
 }

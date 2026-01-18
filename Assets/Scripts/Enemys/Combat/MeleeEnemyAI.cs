@@ -23,7 +23,9 @@ public class MeleeEnemyAI : EnemyAIBase
             return;
         }
 
-        attack.TryAttack();
-    }
+        controller.Stop();
 
+        if (!attack.IsAttacking)
+            attack.TryAttack();
+    }
 }

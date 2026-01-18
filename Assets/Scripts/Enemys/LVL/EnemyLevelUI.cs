@@ -34,7 +34,7 @@ public class EnemyLevelUI : MonoBehaviour
         int enemyLv = enemyLevel.level;
         int playerLv = player.level;
 
-        levelText.text = $"Lv. {enemyLv}";
+        levelText.text = $"Nivel {enemyLv}";
 
         int diff = enemyLv - playerLv;
 
@@ -49,6 +49,10 @@ public class EnemyLevelUI : MonoBehaviour
     private void OnPlayerLevelUp(LevelStats stats, int level)
     {
         Refresh();
+    }
+    public void Hide()
+    {
+        gameObject.SetActive(false);
     }
 
     private void OnEnable()

@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyWorldState : MonoBehaviour, ISaveable
 {
     [SerializeField] private string enemyID;
 
-    // ❌ NO usar Awake para WorldState
+    private void Awake()
+    {
+        if (string.IsNullOrEmpty(enemyID))
+            GenerateID();
+    }
 
     public void LoadData(SaveData data)
     {
@@ -13,7 +18,6 @@ public class EnemyWorldState : MonoBehaviour, ISaveable
 
         if (WorldStateManager.Instance.IsEnemyDead(enemyID))
         {
-            // 🔹 Ya murió en esta partida
             Destroy(gameObject);
         }
     }
@@ -28,4 +32,22 @@ public class EnemyWorldState : MonoBehaviour, ISaveable
     {
         WorldStateManager.Instance?.MarkEnemyDead(enemyID);
     }
+
+    // =========================
+    // ID AUTOMÁTICO
+    // =========================
+    private void GenerateID()
+    {
+        string scene = SceneManager.GetActiveScene().name;
+        Vector3 pos = transform.position;
+
+        enemyID = $"{scene}_Enemy_{pos.x:F2}_{pos.y:F2}";
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        UnityEditor.Handles.Label(transform.position + Vector3.up, enemyID);
+    }
+#endif
 }

@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class WorldStateManager : MonoBehaviour, ISaveable
 {
+    public static event Action OnWorldStateChanged;
     public static WorldStateManager Instance;
 
     // ======================
@@ -74,8 +76,11 @@ public class WorldStateManager : MonoBehaviour, ISaveable
         if (string.IsNullOrEmpty(flagID))
             return;
 
-        worldFlags.Add(flagID);
-        Debug.Log($"[WORLD FLAG SET] {flagID}");
+        if (worldFlags.Add(flagID))
+        {
+            Debug.Log($"[WORLD FLAG SET] {flagID}");
+            OnWorldStateChanged?.Invoke();
+        }
     }
 
     public bool HasFlag(string flagID)

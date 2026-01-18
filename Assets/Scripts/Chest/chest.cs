@@ -53,9 +53,7 @@ public class Chest : MonoBehaviour, IInteractable
 
             if (!InventoryManager.Instance.HasItem(requiredKey))
             {
-                // ❌ No tiene la llave
-                // Aquí luego puedes mostrar mensaje / sonido
-                Debug.Log("Necesitas una llave para abrir este cofre");
+                FeedbackPopupUI.Instance?.Show("Necesitas una llave",transform.position);
                 return;
             }
 

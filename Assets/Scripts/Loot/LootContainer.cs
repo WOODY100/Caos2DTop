@@ -11,15 +11,12 @@ public class LootContainer : MonoBehaviour, IInteractable
 
     [Header("State")]
     public bool IsOpened { get; private set; }
-    protected void MarkOpened()
-    {
-        IsOpened = true;
-    }
 
     [Header("Components")]
     [SerializeField] private Collider2D triggerCollider;
     [SerializeField] private GameObject visualRoot;
 
+    private bool playerInside;
 
     void Awake()
     {
@@ -36,6 +33,7 @@ public class LootContainer : MonoBehaviour, IInteractable
 
         if (visualRoot != null)
             visualRoot.SetActive(true);
+        // ❌ NO abrir loot aquí
     }
 
     public void DisableLoot()
@@ -48,7 +46,11 @@ public class LootContainer : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (IsOpened) return;
+        if (IsOpened)
+            return;
+
+        if (!playerInside)
+            return; // 🔹 seguridad extra
 
         if (LootUI.Instance == null)
         {
@@ -78,10 +80,16 @@ public class LootContainer : MonoBehaviour, IInteractable
 
     protected virtual void OnLootEmpty()
     {
-        if (LootUI.Instance != null)
-            LootUI.Instance.Close();
-
+        LootUI.Instance?.Close();
         Destroy(gameObject);
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player"))
+            return;
+
+        playerInside = true;
     }
 
     void OnTriggerExit2D(Collider2D other)
@@ -89,9 +97,7 @@ public class LootContainer : MonoBehaviour, IInteractable
         if (!other.CompareTag("Player"))
             return;
 
-        if (LootUI.Instance != null)
-        {
-            LootUI.Instance.CloseIfCurrent(this);
-        }
+        playerInside = false;
+        LootUI.Instance?.CloseIfCurrent(this);
     }
 }

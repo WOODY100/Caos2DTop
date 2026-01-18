@@ -60,6 +60,9 @@ public abstract class EnemyAIBase : MonoBehaviour
         agent.avoidancePriority = Random.Range(30, 60);
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        agent.updatePosition = false;
+        agent.updateRotation = false;
+
 
         originPosition = transform.position;
         idleTimer = idleTime;
@@ -140,7 +143,7 @@ public abstract class EnemyAIBase : MonoBehaviour
         idleTimer -= Time.deltaTime;
         if (idleTimer <= 0f)
         {
-            patrolTimer = 0f;
+            patrolTimer = patrolWaitTime;
             ChangeState(State.Patrol);
         }
     }
@@ -211,10 +214,12 @@ public abstract class EnemyAIBase : MonoBehaviour
 
     protected void UpdateMovementDirection()
     {
-        if (agent.velocity.sqrMagnitude > 0.01f)
+        Vector3 desiredVelocity = agent.desiredVelocity;
+
+        if (desiredVelocity.sqrMagnitude > 0.01f)
         {
             Vector3 separation = CalculateSeparation();
-            controller.SetMoveDirection(agent.velocity + separation);
+            controller.SetMoveDirection(desiredVelocity + separation);
         }
         else
         {

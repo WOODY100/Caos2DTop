@@ -157,6 +157,8 @@ GameObject:
   - component: {fileID: 1946302854093106608}
   - component: {fileID: 6718548180921614093}
   - component: {fileID: 7845280252340279571}
+  - component: {fileID: -8210457670182114760}
+  - component: {fileID: 874712327767659508}
   m_Layer: 0
   m_Name: Chest_Key01
   m_TagString: Untagged
@@ -172,7 +174,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4369707018860036107}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 108.84, y: 2.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -221,8 +223,39 @@ MonoBehaviour:
     amount: 1
   - item: {fileID: 11400000, guid: c4c81dcd35f0edc44bbd24e7f3243edb, type: 2}
     amount: 1
+  - item: {fileID: 11400000, guid: 3d71396b712ddf8458439e9c37e8b4f1, type: 2}
+    amount: 1
   triggerCollider: {fileID: 7583973681194924341}
   visualRoot: {fileID: 0}
+--- !u!114 &-8210457670182114760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4369707018860036107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NavMeshPlus::NavMeshPlus.Components.NavMeshModifier
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
+--- !u!114 &874712327767659508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4369707018860036107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 416e96d0a3cf5814892fddce955fd3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChestWorldStateAction
+  flagOnOpen: Reward_Tutorial
 --- !u!1 &8770331146747520025
 GameObject:
   m_ObjectHideFlags: 0

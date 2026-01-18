@@ -22,6 +22,12 @@ public class PlayerController : MonoBehaviour
     public void SetAttacking(bool value)
     {
         IsAttacking = value;
+
+        if (value)
+        {
+            // 🔑 FRENAR DESLIZAMIENTO
+            rb.linearVelocity = Vector2.zero;
+        }
     }
 
     void Awake()

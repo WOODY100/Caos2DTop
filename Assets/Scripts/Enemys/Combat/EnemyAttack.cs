@@ -4,6 +4,7 @@ public class EnemyAttack : MonoBehaviour
 {
     [Header("Attack")]
     public float attackCooldown = 1.2f;
+    public bool IsAttacking => isAttacking;
 
     [Header("Hitboxes")]
     public GameObject hitboxUp;
@@ -39,6 +40,8 @@ public class EnemyAttack : MonoBehaviour
 
         isAttacking = true;
         canAttack = false;
+
+        enemyController.SetCanMove(false);
 
         enemyController.Stop();
         SelectHitbox();
@@ -79,6 +82,7 @@ public class EnemyAttack : MonoBehaviour
 
     public void DisableHitbox()
     {
+        enemyController.SetCanMove(true);
         currentHitbox?.SetActive(false);
         DisableAllHitboxes();
         isAttacking = false;

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DoorController : MonoBehaviour, IInteractable
 {
@@ -30,7 +30,7 @@ public class DoorController : MonoBehaviour, IInteractable
         if (requiredKey != null &&
             !InventoryManager.Instance.HasItem(requiredKey))
         {
-            // feedback: "Necesitas una llave"
+            FeedbackPopupUI.Instance?.Show( "Necesitas una llave", transform.position);
             return;
         }
 
@@ -42,8 +42,7 @@ public class DoorController : MonoBehaviour, IInteractable
         isOpen = true;
         animator.SetBool("isOpen", true);
 
-        solidCollider.enabled = false;
-        triggerCollider.enabled = false;
+        DisableColliders();
 
         if (!string.IsNullOrEmpty(requiredFlag))
             WorldStateManager.Instance.SetFlag(requiredFlag);
@@ -52,8 +51,20 @@ public class DoorController : MonoBehaviour, IInteractable
     private void OpenInstant()
     {
         isOpen = true;
-        animator.Play("Open", 0, 1f);
-        solidCollider.enabled = false;
-        triggerCollider.enabled = false;
+
+        // 🔒 Fuerza el estado abierto SIN reproducir animación
+        animator.SetBool("isOpen", true);
+        animator.Update(0f); // aplica el estado inmediatamente
+
+        DisableColliders();
+    }
+
+    private void DisableColliders()
+    {
+        if (solidCollider != null)
+            solidCollider.enabled = false;
+
+        if (triggerCollider != null)
+            triggerCollider.enabled = false;
     }
 }

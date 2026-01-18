@@ -40,6 +40,8 @@ public class SwordAttack : MonoBehaviour
         if (isAttacking) return;
 
         isAttacking = true;
+
+        player.SetInputEnabled(false); // 🔹 opcional
         player.SetAttacking(true);
 
         SelectHitbox();
@@ -80,6 +82,7 @@ public class SwordAttack : MonoBehaviour
 
         isAttacking = false;
         player.SetAttacking(false);
+        player.SetInputEnabled(true); // 🔹 opcional
     }
 
     void DisableAllHitboxes()

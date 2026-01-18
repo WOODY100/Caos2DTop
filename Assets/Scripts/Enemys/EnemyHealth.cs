@@ -22,6 +22,7 @@ public class EnemyHealth : MonoBehaviour
     private EnemyAttack attack;
     private Rigidbody2D rb;
     private NavMeshAgent agent;
+    private EnemyLevelUI levelUI;
 
     void Awake()
     {
@@ -36,6 +37,7 @@ public class EnemyHealth : MonoBehaviour
         attack = GetComponent<EnemyAttack>();
         rb = GetComponent<Rigidbody2D>();
         agent = GetComponent<NavMeshAgent>();
+        levelUI = GetComponentInChildren<EnemyLevelUI>(true);
     }
 
     public void TakeDamage(int amount, bool isCritical = false)
@@ -68,6 +70,9 @@ public class EnemyHealth : MonoBehaviour
 
         if (IsDead) return;
         IsDead = true;
+        
+        // 🧾 UI de nivel / vida
+        levelUI?.Hide();
 
         // 🎞️ Animación
         animator.PlayDeath();
@@ -109,6 +114,7 @@ public class EnemyHealth : MonoBehaviour
 
         // ⏳ Cadáver
         StartCoroutine(CorpseRoutine());
+        
     }
 
 
