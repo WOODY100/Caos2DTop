@@ -198,6 +198,7 @@ GameObject:
   - component: {fileID: 4591191742163388593}
   - component: {fileID: 4618101476659878445}
   - component: {fileID: 7616566970341172626}
+  - component: {fileID: 4616616490347195341}
   - component: {fileID: 6169565861987798618}
   - component: {fileID: 4950505861460100075}
   - component: {fileID: 8382869678668922972}
@@ -485,6 +486,18 @@ MonoBehaviour:
   moveSpeed: 5
   canMove: 1
   currentDirection: 3
+--- !u!114 &4616616490347195341
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936183076624203310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ff95ccb6e0b524faaf880ae42e5ba7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!114 &6169565861987798618
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -525,6 +538,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4675043def9dcf14097c33e60033dc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStats
+  healthLoadedFromSave: 0
   baseHealth: 100
   baseAttack: 10
   baseDefense: 5

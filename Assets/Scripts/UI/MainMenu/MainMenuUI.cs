@@ -8,6 +8,13 @@ public class MainMenuUI : MonoBehaviour
     {
         if (GameStateManager.Instance != null)
             GameStateManager.Instance.SetState(GameState.Menu);
+
+        // 🔑 FIX CLAVE: revelar menú si venimos de negro
+        if (FadeManager.Instance != null)
+        {
+            FadeManager.Instance.SetAlpha(1f);      // asegurar negro
+            StartCoroutine(FadeManager.Instance.FadeIn());
+        }
     }
 
     public void ContinueGame()
