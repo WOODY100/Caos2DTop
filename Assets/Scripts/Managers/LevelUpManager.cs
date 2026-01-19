@@ -68,32 +68,32 @@ public class LevelUpManager : MonoBehaviour
     private List<LevelUpOption> GenerateOptions()
     {
         return new List<LevelUpOption>
+    {
+        new LevelUpOption
         {
-            new LevelUpOption
-            {
-                title = "Vida +20",
-                description = "Aumenta la vida máxima",
-                health = 20
-            },
-            new LevelUpOption
-            {
-                title = "Ataque +4",
-                description = "Aumenta el daño",
-                attack = 4
-            },
-            new LevelUpOption
-            {
-                title = "Defensa +3",
-                description = "Aumenta la defensa",
-                defense = 3
-            },
-            new LevelUpOption
-            {
-                title = "Velocidad +0.4",
-                description = "Te mueves más rápido",
-                speed = 0.4f
-            }
-        };
+            title = "Vida +12",
+            description = "Aumenta la vida máxima",
+            health = 12
+        },
+        new LevelUpOption
+        {
+            title = "Ataque +2",
+            description = "Aumenta el daño",
+            attack = 2
+        },
+        new LevelUpOption
+        {
+            title = "Defensa +1",
+            description = "Reduce el daño recibido",
+            defense = 1
+        },
+        new LevelUpOption
+        {
+            title = "Velocidad +0.25",
+            description = "Te mueves más rápido",
+            speed = 0.25f
+        }
+    };
     }
 
     private void ApplyOption(LevelUpOption option)

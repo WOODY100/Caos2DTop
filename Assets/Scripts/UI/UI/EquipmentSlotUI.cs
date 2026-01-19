@@ -15,6 +15,7 @@ public class EquipmentSlotUI : MonoBehaviour,
 
     private void Awake()
     {
+        EquipmentManager.Instance?.RegisterSlot(this);
         if (icon != null)
             icon.enabled = false;
     }

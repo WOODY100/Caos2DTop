@@ -1,24 +1,28 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(Animator))]
 public class EnemyAnimator : MonoBehaviour
 {
-    private Animator animator;
+    [SerializeField] private Animator animator;
+
     private EnemyController enemy;
     private EnemyHealth health;
 
     void Awake()
     {
-        animator = GetComponent<Animator>();
         enemy = GetComponent<EnemyController>();
         health = GetComponent<EnemyHealth>();
+
+        // 🔑 Auto-buscar si no está asignado
+        if (animator == null)
+            animator = GetComponentInChildren<Animator>();
+
+        if (animator == null)
+            Debug.LogError($"[EnemyAnimator] No Animator found on {name}");
     }
 
     void Update()
     {
-        // 🔴 SI ESTÁ MUERTO, NO ACTUALIZAR NADA
         if (health != null && health.IsDead)
             return;
 
@@ -47,12 +51,9 @@ public class EnemyAnimator : MonoBehaviour
     {
         animator.SetBool("IsMoving", false);
         animator.SetBool("IsDead", true);
-        StartCoroutine(PlayCorpe());
     }
-
-    IEnumerator PlayCorpe()
+    public void Anim_DeathFinished()
     {
-        yield return new WaitForSeconds(1f);
-        animator.SetBool("IsDead", false);
+        animator.SetTrigger("DeathFinished");
     }
 }

@@ -42,7 +42,7 @@ public class EnemyLevel : MonoBehaviour
         level = Mathf.Clamp(
             playerLevel + levelOffset,
             minLevel,
-            maxLevel
+            Mathf.Min(maxLevel, playerLevel + 2)
         );
     }
 

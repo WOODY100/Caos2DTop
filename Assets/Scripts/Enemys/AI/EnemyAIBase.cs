@@ -17,6 +17,7 @@ public abstract class EnemyAIBase : MonoBehaviour
 
     protected PlayerAttackSlots attackSlots;
     protected bool hasAttackSlot;
+    protected EnemyLevel enemyLevel;
 
     [Header("Target")]
     [SerializeField] protected Transform player;
@@ -32,6 +33,8 @@ public abstract class EnemyAIBase : MonoBehaviour
     public float attackDistance = 1.1f;
 
     [Header("Idle")]
+    [SerializeField] private float moveThreshold = 0.05f;
+    [SerializeField] private float idleDelay = 0.1f;
     public float idleTime = 1f;
     protected float idleTimer;
 
@@ -60,13 +63,18 @@ public abstract class EnemyAIBase : MonoBehaviour
         agent.avoidancePriority = Random.Range(30, 60);
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-        agent.updatePosition = false;
         agent.updateRotation = false;
 
 
         originPosition = transform.position;
         idleTimer = idleTime;
         currentState = State.Idle;
+
+        if (agent != null && enemyLevel != null)
+        {
+            agent.speed = enemyLevel.speed;
+            agent.acceleration = enemyLevel.speed * 4f;
+        }
 
         // 🔍 Auto-detectar Player
         if (player == null)
@@ -214,38 +222,22 @@ public abstract class EnemyAIBase : MonoBehaviour
 
     protected void UpdateMovementDirection()
     {
-        Vector3 desiredVelocity = agent.desiredVelocity;
+        Vector3 desired = agent.desiredVelocity;
 
-        if (desiredVelocity.sqrMagnitude > 0.01f)
+        if (desired.magnitude > moveThreshold && controller.CanMove)
         {
-            Vector3 separation = CalculateSeparation();
-            controller.SetMoveDirection(desiredVelocity + separation);
+            idleTimer = 0f;
+            controller.SetMoveDirection(desired);
         }
         else
         {
-            controller.Stop();
+            idleTimer += Time.deltaTime;
+
+            if (idleTimer >= idleDelay)
+            {
+                controller.Stop();
+            }
         }
-    }
-
-    protected Vector3 CalculateSeparation()
-    {
-        Collider2D[] nearby =
-            Physics2D.OverlapCircleAll(transform.position, separationRadius, enemyLayer);
-
-        Vector3 force = Vector3.zero;
-
-        foreach (var col in nearby)
-        {
-            if (col.transform == transform) continue;
-
-            Vector3 dir = transform.position - col.transform.position;
-            float dist = dir.magnitude;
-
-            if (dist > 0.01f)
-                force += dir.normalized / dist;
-        }
-
-        return force * separationStrength;
     }
 
     protected bool PlayerDetected()

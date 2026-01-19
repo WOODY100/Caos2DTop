@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,6 +11,7 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Death")]
     public float corpseDuration = 60f;
+    public event Action OnEnemyDied;
 
     public bool IsDead { get; private set; }
 
@@ -60,6 +62,8 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
+        OnEnemyDied?.Invoke();
+
         GetComponent<EnemyWorldStateAction>()?.ExecuteOnDeath();
         GetComponent<EnemyWorldState>()?.MarkAsDead();
 

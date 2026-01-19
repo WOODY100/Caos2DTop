@@ -42,8 +42,8 @@ public class EnemyAttack : MonoBehaviour
         canAttack = false;
 
         enemyController.SetCanMove(false);
-
         enemyController.Stop();
+
         SelectHitbox();
         enemyAnimator.PlayAttack();
 
@@ -60,30 +60,24 @@ public class EnemyAttack : MonoBehaviour
         DisableAllHitboxes();
 
         Vector2 dir = enemyController.GetMoveDirection();
-
         if (dir == Vector2.zero)
-            dir = Vector2.down; // fallback
+            dir = Vector2.down;
 
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
-        {
             currentHitbox = dir.x > 0 ? hitboxRight : hitboxLeft;
-        }
         else
-        {
             currentHitbox = dir.y > 0 ? hitboxUp : hitboxDown;
-        }
     }
 
-    // 🎞️ Animation Events
-    public void EnableHitbox()
+    // 🎞️ Animation Events (OFICIALES)
+    public void Anim_AttackStart()
     {
         currentHitbox?.SetActive(true);
     }
 
-    public void DisableHitbox()
+    public void Anim_AttackEnd()
     {
         enemyController.SetCanMove(true);
-        currentHitbox?.SetActive(false);
         DisableAllHitboxes();
         isAttacking = false;
     }

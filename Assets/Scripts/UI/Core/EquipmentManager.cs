@@ -10,14 +10,8 @@ public class EquipmentManager : MonoBehaviour, ISaveable
     private PlayerStats playerStats;
 
 
-    [Header("Equipment Slots")]
-    public EquipmentSlotUI helmet;
-    public EquipmentSlotUI armor;
-    public EquipmentSlotUI legs;
-    public EquipmentSlotUI boots;
-    public EquipmentSlotUI sword;
-    public EquipmentSlotUI necklace;
-    public EquipmentSlotUI ring;
+    private Dictionary<ItemType, EquipmentSlotUI> slots =
+    new Dictionary<ItemType, EquipmentSlotUI>();
 
     private void Awake()
     {
@@ -108,17 +102,8 @@ public class EquipmentManager : MonoBehaviour, ISaveable
 
     private EquipmentSlotUI GetSlot(ItemType type)
     {
-        return type switch
-        {
-            ItemType.Helmet => helmet,
-            ItemType.Armor => armor,
-            ItemType.Legs => legs,
-            ItemType.Boots => boots,
-            ItemType.Sword => sword,
-            ItemType.Necklace => necklace,
-            ItemType.Ring => ring,
-            _ => null
-        };
+        slots.TryGetValue(type, out EquipmentSlotUI slot);
+        return slot;
     }
 
     public ItemData GetEquipped(ItemType type)
@@ -184,4 +169,16 @@ public class EquipmentManager : MonoBehaviour, ISaveable
         }
     }
 
+    public void RegisterSlot(EquipmentSlotUI slot)
+    {
+        if (slot == null) return;
+
+        if (slots.ContainsKey(slot.acceptedType))
+        {
+            Debug.LogWarning($"Duplicate slot for {slot.acceptedType}");
+            return;
+        }
+
+        slots.Add(slot.acceptedType, slot);
+    }
 }

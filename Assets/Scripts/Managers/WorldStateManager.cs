@@ -78,7 +78,6 @@ public class WorldStateManager : MonoBehaviour, ISaveable
 
         if (worldFlags.Add(flagID))
         {
-            Debug.Log($"[WORLD FLAG SET] {flagID}");
             OnWorldStateChanged?.Invoke();
         }
     }

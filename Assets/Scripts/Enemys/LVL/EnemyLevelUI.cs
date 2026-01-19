@@ -3,15 +3,13 @@ using UnityEngine;
 
 public class EnemyLevelUI : MonoBehaviour
 {
-    [Header("References")]
-    public TMP_Text levelText;
-    public EnemyLevel enemyLevel;
-
     [Header("Colors")]
     public Color lowLevelColor = Color.green;
     public Color equalLevelColor = Color.yellow;
     public Color highLevelColor = Color.red;
 
+    private TMP_Text levelText;
+    private EnemyLevel enemyLevel;
     private PlayerExperience player;
 
     private void Awake()
@@ -19,8 +17,12 @@ public class EnemyLevelUI : MonoBehaviour
         if (enemyLevel == null)
             enemyLevel = GetComponentInParent<EnemyLevel>();
 
+        if (levelText == null)
+            levelText = GetComponentInChildren<TMP_Text>(true);
+
         player = FindAnyObjectByType<PlayerExperience>();
     }
+
 
     private void Start()
     {
@@ -29,12 +31,13 @@ public class EnemyLevelUI : MonoBehaviour
 
     public void Refresh()
     {
-        if (enemyLevel == null || player == null) return;
+        if (levelText == null || enemyLevel == null || player == null)
+            return;
 
         int enemyLv = enemyLevel.level;
         int playerLv = player.level;
 
-        levelText.text = $"Nivel {enemyLv}";
+        levelText.text = $"Lv {enemyLv}";
 
         int diff = enemyLv - playerLv;
 

@@ -289,9 +289,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InventoryManager
   inventorySize: 25
-  items:
-  - {fileID: 11400000, guid: 32c7f0923d7ddc44db001675a2d0e125, type: 2}
-  - {fileID: 11400000, guid: c4c81dcd35f0edc44bbd24e7f3243edb, type: 2}
+  items: []
   coins: 50
 --- !u!1 &3047958517912703869
 GameObject:
