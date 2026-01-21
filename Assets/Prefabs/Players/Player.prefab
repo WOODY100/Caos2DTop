@@ -204,12 +204,13 @@ GameObject:
   - component: {fileID: 8382869678668922972}
   - component: {fileID: 1192646593159156217}
   - component: {fileID: 7500694566589599887}
-  - component: {fileID: 3253447638189803061}
   - component: {fileID: 8638959624777005313}
   - component: {fileID: 5046018510143290014}
   - component: {fileID: 2061081185094638166}
   - component: {fileID: 5908335595158227392}
   - component: {fileID: 2490113099379786509}
+  - component: {fileID: 5824233873838547757}
+  - component: {fileID: 5294985044953239865}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -578,25 +579,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af8401ffd8c799b45ae526d53922a9d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerSpawnResolver
---- !u!114 &3253447638189803061
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5936183076624203310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4fa5483fd22df1841ad7cd2a15c31150, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EquipmentManager
-  helmet: {fileID: 0}
-  armor: {fileID: 0}
-  legs: {fileID: 0}
-  boots: {fileID: 0}
-  sword: {fileID: 0}
-  necklace: {fileID: 0}
-  ring: {fileID: 0}
 --- !u!114 &8638959624777005313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -657,6 +639,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 428207f473689bf47a03b8ca9ca18a23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerStatsSave
+--- !u!114 &5824233873838547757
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936183076624203310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb2ee537bd6cee24ab39fc884469b099, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PotionCooldownManager
+  potionCooldown: 2
+--- !u!114 &5294985044953239865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5936183076624203310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e724502307a4224abb1a897b9f45e6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HotbarInputHandler
 --- !u!1 &6814656865112750080
 GameObject:
   m_ObjectHideFlags: 0

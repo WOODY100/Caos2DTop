@@ -13,14 +13,13 @@ MonoBehaviour:
   m_Name: Dragon_Helmet
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
   itemName: Dragon Helmet
-  icon: {fileID: -2157682245520061201, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
+  icon: {fileID: -4045539512769578970, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
   type: 4
-  description: "Un casco forjado con escamas de drag\xF3n endurecidas por el fuego.\r\nAumenta
-    la vitalidad y protege al portador de golpes devastadores."
+  description: Casco forjado con fuego de dragon que da una estupenda defensa.
   stackable: 0
   maxStack: 99
-  bonusHealth: 10
+  bonusHealth: 5
   bonusAttack: 0
-  bonusDefense: 5
+  bonusDefense: 10
   bonusSpeed: 0
-  itemID: Dragon_Helmet
+  itemID: dragon_helmet

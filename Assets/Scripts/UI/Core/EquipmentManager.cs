@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EquipmentManager : MonoBehaviour, ISaveable
 {
+    private List<EquippedItemData> pendingEquipment;
+
     private readonly System.Collections.Generic.Dictionary<ItemType, ItemData> equipped =
     new System.Collections.Generic.Dictionary<ItemType, ItemData>();
 
@@ -62,7 +65,8 @@ public class EquipmentManager : MonoBehaviour, ISaveable
     public void Unequip(ItemType type)
     {
         EquipmentSlotUI slot = GetSlot(type);
-        if (slot == null) return;
+        if (slot == null || !slot.isActiveAndEnabled)
+            return;
 
         ItemData removedItem = slot.Unequip();
 
@@ -159,26 +163,96 @@ public class EquipmentManager : MonoBehaviour, ISaveable
 
     public void LoadData(SaveData data)
     {
-        ClearAllSlots();
-
-        foreach (var equippedItem in data.equippedItems)
-        {
-            ItemData item = ItemDatabase.Instance.GetItem(equippedItem.itemID);
-            if (item != null)
-                EquipSilently(item);
-        }
+        // Guardamos, NO aplicamos todavía
+        pendingEquipment = data.equippedItems;
     }
 
     public void RegisterSlot(EquipmentSlotUI slot)
     {
-        if (slot == null) return;
-
-        if (slots.ContainsKey(slot.acceptedType))
-        {
-            Debug.LogWarning($"Duplicate slot for {slot.acceptedType}");
+        if (slot == null)
             return;
+
+        slots[slot.acceptedType] = slot;
+        // ❌ NO aplicar aquí
+    }
+
+    public bool EquipFromInventory(ItemData item)
+    {
+        if (item == null)
+            return false;
+
+        EquipmentSlotUI slot = GetSlot(item.type);
+        if (slot == null || !slot.isActiveAndEnabled)
+            return false;
+
+        // 🔒 quitar del inventario SOLO AQUÍ
+        if (!InventoryManager.Instance.RemoveItem(item, 1))
+            return false;
+
+        ItemData previous = slot.Equip(item);
+        equipped[item.type] = item;
+
+        // 🔁 devolver anterior
+        if (previous != null)
+            InventoryManager.Instance.AddItem(previous, 1);
+
+        playerStats?.RecalculateStats();
+        return true;
+    }
+
+    private void TryApplyPendingEquipment()
+    {
+        if (pendingEquipment == null || pendingEquipment.Count == 0)
+            return;
+
+        equipped.Clear();
+
+        foreach (var equippedItem in pendingEquipment)
+        {
+            ItemData item = ItemDatabase.Instance.GetItem(equippedItem.itemID);
+            if (item == null)
+                continue;
+
+            EquipSilentlyToSlot(equippedItem.slotType, item);
         }
 
-        slots.Add(slot.acceptedType, slot);
+        pendingEquipment = null;
+        playerStats?.RecalculateStats();
+    }
+
+    public void NotifySlotUIReady()
+    {
+        TryApplyPendingEquipment();
+    }
+    
+    private void EquipSilentlyToSlot(ItemType slotType, ItemData item)
+    {
+        if (item == null)
+            return;
+
+        if (!slots.TryGetValue(slotType, out EquipmentSlotUI slot))
+            return;
+
+        equipped[slotType] = item;
+        slot.Equip(item);
+    }
+
+    public void ClearUISlots()
+    {
+        slots.Clear();
+    }
+    
+    public void RefreshUIFromEquipped()
+    {
+        foreach (var pair in equipped)
+        {
+            if (!slots.TryGetValue(pair.Key, out EquipmentSlotUI slot))
+                continue;
+
+            if (slot == null || !slot.isActiveAndEnabled)
+                continue;
+
+            slot.Equip(pair.Value);
+        }
     }
 }

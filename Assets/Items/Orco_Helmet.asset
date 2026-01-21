@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05cfc5bb505c85b46b8f38c85c4440fe, type: 3}
-  m_Name: Chest_Key01
+  m_Name: Orco_Helmet
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Llave de cofre
-  icon: {fileID: 5543941588292853863, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
-  type: 2
-  description: Una llave antigua que abre cofres y puertas selladas.
-  stackable: 1
+  itemName: Casco de Orco
+  icon: {fileID: 6938154854020723397, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
+  type: 4
+  description: Un casco basico de Orco, te da poca proteccion fisica
+  stackable: 0
   maxStack: 99
-  bonusHealth: 0
+  bonusHealth: 1
   bonusAttack: 0
-  bonusDefense: 0
+  bonusDefense: 2
   bonusSpeed: 0
-  itemID: Chest_Key01
+  itemID: orco_helmet

@@ -60,15 +60,19 @@ public class EnemyLevelUI : MonoBehaviour
 
     private void OnEnable()
     {
-        PlayerExperience exp = FindAnyObjectByType<PlayerExperience>();
-        if (exp != null)
-            exp.OnLevelUp += OnPlayerLevelUp;
+        if (enemyLevel != null)
+            enemyLevel.OnLevelChanged += Refresh;
+
+        if (player != null)
+            player.OnLevelUp += OnPlayerLevelUp;
     }
 
     private void OnDisable()
     {
-        PlayerExperience exp = FindAnyObjectByType<PlayerExperience>();
-        if (exp != null)
-            exp.OnLevelUp -= OnPlayerLevelUp;
+        if (enemyLevel != null)
+            enemyLevel.OnLevelChanged -= Refresh;
+
+        if (player != null)
+            player.OnLevelUp -= OnPlayerLevelUp;
     }
 }

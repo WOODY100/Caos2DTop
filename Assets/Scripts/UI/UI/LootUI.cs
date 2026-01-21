@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LootUI : MonoBehaviour
 {
+    [SerializeField] private ScrollRect parentScrollRect;
     public static LootUI Instance { get; private set; }
 
     [Header("UI")]

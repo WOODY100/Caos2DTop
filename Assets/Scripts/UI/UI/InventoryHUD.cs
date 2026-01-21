@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine;
 
 public class InventoryHUD : MonoBehaviour
 {
@@ -56,6 +57,8 @@ public class InventoryHUD : MonoBehaviour
 
         isOpen = true;
         gameObject.SetActive(true);
+
+        EquipmentManager.Instance?.RefreshUIFromEquipped();
     }
 
     public void Close()
@@ -63,11 +66,13 @@ public class InventoryHUD : MonoBehaviour
         if (!isOpen) return;
 
         ItemTooltipUI.Instance?.Hide();
-
         GameStateManager.Instance.SetState(GameState.Playing);
 
         isOpen = false;
         gameObject.SetActive(false);
+
+        // 🔥 AVISAR AL EQUIPMENT MANAGER
+        EquipmentManager.Instance?.ClearUISlots();
 
         if (UIModalManager.Instance != null)
             UIModalManager.Instance.Close(this);
@@ -84,23 +89,41 @@ public class InventoryHUD : MonoBehaviour
 
     public void Refresh()
     {
-        //Debug.Log($"[HUD] Items en inventario: {InventoryManager.Instance.items.Count}");
-
         var inventory = InventoryManager.Instance.items;
 
-        for (int i = 0; i < slots.Length; i++)
-        {
-            if (slots[i] == null)
-                continue;
+        // 🔹 Agrupar items por ID
+        Dictionary<ItemData, int> grouped = new Dictionary<ItemData, int>();
 
-            if (i < inventory.Count)
-                slots[i].SetItem(inventory[i]);
+        foreach (var item in inventory)
+        {
+            if (item == null) continue;
+
+            if (grouped.ContainsKey(item))
+                grouped[item]++;
             else
-                slots[i].Clear();
+                grouped[item] = 1;
+        }
+
+        int index = 0;
+
+        foreach (var pair in grouped)
+        {
+            if (index >= slots.Length)
+                break;
+
+            slots[index].SetItem(pair.Key, pair.Value);
+            index++;
+        }
+
+        // Limpiar slots restantes
+        for (int i = index; i < slots.Length; i++)
+        {
+            slots[i].Clear();
         }
 
         coinsText.text = InventoryManager.Instance.GetCoins().ToString();
     }
+
 
     private void RefreshDelayed()
     {

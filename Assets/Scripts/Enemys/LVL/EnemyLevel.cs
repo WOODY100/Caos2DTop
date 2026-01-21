@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class EnemyLevel : MonoBehaviour
 {
@@ -26,11 +27,15 @@ public class EnemyLevel : MonoBehaviour
     public int expReward;
     public float speed;
 
+    public event Action OnLevelChanged;
+
     private void Awake()
     {
         CalculateLevel();
         CalculateStats();
         ApplyToComponents();
+
+        OnLevelChanged?.Invoke();
     }
 
     void CalculateLevel()

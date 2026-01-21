@@ -19,11 +19,13 @@ public class EnemySpawnZone : MonoBehaviour
     private bool playerInside;
     private bool respawning;
     private Transform player;
+    private PlayerExperience playerExp;
 
     void Awake()
     {
         zoneCollider = GetComponent<Collider2D>();
         zoneCollider.isTrigger = true;
+        playerExp = FindFirstObjectByType<PlayerExperience>();
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -93,7 +95,11 @@ public class EnemySpawnZone : MonoBehaviour
                 continue;
 
             EnemySpawnEntry entry = PickWeighted(pool);
-            GameObject enemy = Instantiate(entry.enemyPrefab, pos, Quaternion.identity);
+            GameObject enemy = EnemyPoolManager.Instance.GetEnemy(
+                entry.enemyPrefab,
+                pos,
+                Quaternion.identity
+            );
             RegisterEnemy(enemy);
             return;
         }
@@ -105,7 +111,15 @@ public class EnemySpawnZone : MonoBehaviour
 
         EnemyHealth health = enemy.GetComponent<EnemyHealth>();
         if (health != null)
-            health.OnEnemyDied += () => OnEnemyDied(enemy);
+            health.OnEnemyDied += HandleEnemyDeath;
+    }
+
+    private void HandleEnemyDeath(GameObject enemy)
+    {
+        activeEnemies.Remove(enemy);
+
+        if (!playerInside && activeEnemies.Count == 0 && !respawning)
+            StartCoroutine(RespawnRoutine());
     }
 
     private void OnEnemyDied(GameObject enemy)

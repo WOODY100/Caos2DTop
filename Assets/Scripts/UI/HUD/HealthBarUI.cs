@@ -53,9 +53,8 @@ public class HealthBarUI : MonoBehaviour
             fillImage.fillAmount = Mathf.MoveTowards(
                 fillImage.fillAmount,
                 target,
-                fillSpeed * Time.deltaTime
+                fillSpeed * Time.unscaledDeltaTime
             );
-
             yield return null;
         }
     }

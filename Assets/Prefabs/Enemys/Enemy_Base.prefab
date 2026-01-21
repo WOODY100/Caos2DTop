@@ -471,6 +471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1da6946fbdc3704697755056a1f6bdf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyHealth
+  prefabSource: {fileID: 1857035465819818571}
   maxHealth: 30
   corpseDuration: 60
 --- !u!114 &2444780071814536898

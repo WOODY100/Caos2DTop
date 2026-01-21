@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 05cfc5bb505c85b46b8f38c85c4440fe, type: 3}
-  m_Name: key_exit_tutorial
+  m_Name: Lizard_Sword
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Llave de la isla
-  icon: {fileID: 5543941588292853863, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
-  type: 2
-  description: 
+  itemName: Lizard Sword
+  icon: {fileID: 4384684074734077993, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
+  type: 8
+  description: "Una espada hecha con escamas de Lizard, tiene un da\xF1o medio."
   stackable: 0
   maxStack: 99
   bonusHealth: 0
-  bonusAttack: 0
-  bonusDefense: 0
+  bonusAttack: 9
+  bonusDefense: 3
   bonusSpeed: 0
-  itemID: key_exit_tutorial
+  itemID: lizard_sword

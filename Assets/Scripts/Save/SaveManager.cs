@@ -296,7 +296,7 @@ public class SaveManager : MonoBehaviour
             baseSpeed = 5f,
             currentHealth = 100,
 
-            inventoryItemIDs = new(),
+            inventoryItems = new(),
             equippedItems = new(),
             coins = 0,
 

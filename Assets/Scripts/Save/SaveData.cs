@@ -15,7 +15,7 @@ public class SaveData
     public int playerLevel;
     public int playerCurrentExp;
     public int playerExpToNextLevel;
-    
+
     // RUNTIME
     public int currentHealth;
 
@@ -25,9 +25,17 @@ public class SaveData
     public int baseDefense;
     public float baseSpeed;
 
-    // INVENTORY
-    public List<string> inventoryItemIDs = new();
+    // INVENTORY (CORRECTO)
+    [Header("Inventory")]
+    public List<ItemStackSaveData> inventoryItems = new();
+
+    // EQUIPMENT
+    [Header("Equipment")]
     public List<EquippedItemData> equippedItems = new();
+
+    // HOTBAR
+    [Header("Hotbar")]
+    public List<HotbarSlotSaveData> hotbarItems = new();
 
     // CURRENCY
     public int coins;
@@ -36,10 +44,8 @@ public class SaveData
     public List<string> openedChests = new();
     public List<string> deadEnemies = new();
 
-    //QUESTS
-    [Header("Quests")]
+    // QUESTS
     public List<string> completedQuestIDs = new();
-
 
     public SaveMetaData meta;
 }

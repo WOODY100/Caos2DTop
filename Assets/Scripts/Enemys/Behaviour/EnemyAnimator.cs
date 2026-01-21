@@ -56,4 +56,19 @@ public class EnemyAnimator : MonoBehaviour
     {
         animator.SetTrigger("DeathFinished");
     }
+
+    public void ResetToIdle()
+    {
+        if (animator == null) return;
+
+        animator.Rebind();          // 🔑 Limpia TODOS los parámetros y estados
+        animator.Update(0f);        // Fuerza actualización inmediata
+
+        animator.SetBool("IsDead", false);
+        animator.SetBool("IsMoving", false);
+
+        animator.ResetTrigger("Attack");
+        animator.ResetTrigger("Hurt");
+        animator.ResetTrigger("DeathFinished");
+    }
 }

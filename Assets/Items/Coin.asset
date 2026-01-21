@@ -12,17 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05cfc5bb505c85b46b8f38c85c4440fe, type: 3}
   m_Name: Coin
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Coin
-  icon: {fileID: 4321908322816216039, guid: 8ea41af74015e154dabd20b729fcf39d, type: 3}
+  itemName: Moneda
+  icon: {fileID: -7368062867756086752, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
   type: 1
-  description: 'Monedas comunes usadas en todo el reino.
-
-    Sirven para comerciar
-    con mercaderes y pagar servicios.'
-  stackable: 0
-  maxStack: 999999
+  description: Moneda estandar que se ocupa para realizar tratos en todo el mundo.
+  stackable: 1
+  maxStack: 99
   bonusHealth: 0
   bonusAttack: 0
   bonusDefense: 0
   bonusSpeed: 0
-  itemID: Coin
+  itemID: coin

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9266f6543d066564db8d2c8e16d47bf4, type: 3}
+  m_Name: Health_potion_menor
+  m_EditorClassIdentifier: Assembly-CSharp::HealthPotionItem
+  itemName: Pcion De Vida Menor
+  icon: {fileID: 1245911119886656155, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
+  type: 0
+  description: "Pocion menor de vida. Cura una cantidad peque\xF1a de vida al usuarla."
+  stackable: 1
+  maxStack: 99
+  bonusHealth: 0
+  bonusAttack: 0
+  bonusDefense: 0
+  bonusSpeed: 0
+  itemID: Health_potion_menor
+  healAmount: 50

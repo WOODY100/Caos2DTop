@@ -127,15 +127,29 @@ public class InventoryManager : MonoBehaviour, ISaveable
     // =============================
     public void SaveData(SaveData data)
     {
-        data.inventoryItemIDs.Clear();
+        data.inventoryItems.Clear();
+        data.coins = coins;
+
+        Dictionary<string, int> counts = new Dictionary<string, int>();
 
         foreach (var item in items)
         {
-            if (item != null)
-                data.inventoryItemIDs.Add(item.itemID);
+            if (item == null) continue;
+
+            if (!counts.ContainsKey(item.itemID))
+                counts[item.itemID] = 0;
+
+            counts[item.itemID]++;
         }
 
-        data.coins = coins;
+        foreach (var pair in counts)
+        {
+            data.inventoryItems.Add(new ItemStackSaveData
+            {
+                itemID = pair.Key,
+                quantity = pair.Value
+            });
+        }
     }
 
     public void LoadData(SaveData data)
@@ -143,11 +157,17 @@ public class InventoryManager : MonoBehaviour, ISaveable
         items.Clear();
         coins = data.coins;
 
-        foreach (string id in data.inventoryItemIDs)
+        if (data.inventoryItems == null)
+            return;
+
+        foreach (var saved in data.inventoryItems)
         {
-            ItemData item = ItemDatabase.Instance.GetItem(id);
-            if (item != null)
-                AddItem(item, 1);
+            ItemData item = ItemDatabase.Instance.GetItem(saved.itemID);
+            if (item == null)
+                continue;
+
+            for (int i = 0; i < saved.quantity; i++)
+                items.Add(item);
         }
 
         OnInventoryChanged?.Invoke();
@@ -156,5 +176,14 @@ public class InventoryManager : MonoBehaviour, ISaveable
     public bool HasItem(ItemData item)
     {
         return items.Exists(i => i.itemID == item.itemID);
+    }
+
+    public int GetItemCount(ItemData item)
+    {
+        int count = 0;
+        foreach (var i in items)
+            if (i == item)
+                count++;
+        return count;
     }
 }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerStats : MonoBehaviour
 {
+    public static PlayerStats Instance { get; private set; }
+
     [HideInInspector] public bool healthLoadedFromSave;
 
     public static event Action OnStatsChanged;
@@ -28,15 +30,25 @@ public class PlayerStats : MonoBehaviour
     public float critChance = 0.15f;      // 15%
     public float critMultiplier = 1.5f;   // x1.5 daño
 
+    private void Start()
+    {
+        EquipmentManager.Instance?.SetPlayerStats(this);
+    }
 
     private void Awake()
     {
+        Instance = this;
         EquipmentManager.Instance?.SetPlayerStats(this);
 
         // ⚠️ NO inicializar stats aquí
         // Esto se hará:
         // - en partida nueva
         // - o después de LoadData()
+    }
+
+    private void OnEnable()
+    {
+        EquipmentManager.Instance?.SetPlayerStats(this);
     }
 
     public void RecalculateStats()
@@ -108,5 +120,10 @@ public class PlayerStats : MonoBehaviour
         RecalculateStats();
         currentHealth = maxHealth;
         OnHealthChanged?.Invoke();
+    }
+    
+    public bool IsHealthFull()
+    {
+        return currentHealth >= maxHealth;
     }
 }

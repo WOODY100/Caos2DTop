@@ -29,8 +29,14 @@ public class ItemTooltipUI : MonoBehaviour
 
     void Update()
     {
-        if (root.activeSelf)
-            FollowMouse();
+        if (!root.activeSelf)
+            return;
+
+        // ❌ No seguir mouse si hay drag
+        if (DragItemUI.Instance != null && DragItemUI.Instance.Item != null)
+            return;
+
+        FollowMouse();
     }
 
     public void Show(ItemData item)

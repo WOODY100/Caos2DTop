@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 4018358516568208008}
   - component: {fileID: 1433555331419188718}
   m_Layer: 0
-  m_Name: Chest
+  m_Name: Chest_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -70,9 +70,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c5e361d759593245a9466d2e8e64044, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChestLootContainer
-  loot:
-  - item: {fileID: 11400000, guid: 6b4c8b8d602014940a24f566ddd57063, type: 2}
-    amount: 1
+  loot: []
   triggerCollider: {fileID: 8325728841356579705}
   visualRoot: {fileID: 0}
 --- !u!114 &4018358516568208008

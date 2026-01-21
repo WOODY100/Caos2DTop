@@ -3,6 +3,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EquipmentSlotUI : MonoBehaviour,
+    IDropHandler,
     IPointerClickHandler,
     IPointerEnterHandler,
     IPointerExitHandler
@@ -20,8 +21,9 @@ public class EquipmentSlotUI : MonoBehaviour,
             icon.enabled = false;
     }
 
-    private void OnEnable()
+    private void Start()
     {
+        EquipmentManager.Instance?.NotifySlotUIReady();
         RefreshFromEquipment();
     }
 
@@ -32,28 +34,25 @@ public class EquipmentSlotUI : MonoBehaviour,
 
     public ItemData Equip(ItemData item)
     {
-        if (!CanEquip(item)) return null;
-
-        ItemData previousItem = equippedItem;
-
+        ItemData previous = equippedItem;
         equippedItem = item;
+
+        if (!this || !icon)
+            return previous;
+
         icon.sprite = item.icon;
         icon.enabled = true;
 
-        return previousItem;
+        return previous;
     }
 
     public ItemData Unequip()
     {
         if (equippedItem == null) return null;
 
-        ItemData oldItem = equippedItem;
-        equippedItem = null;
-
-        icon.sprite = null;
-        icon.enabled = false;
-
-        return oldItem;
+        ItemData old = equippedItem;
+        Clear();
+        return old;
     }
 
     public ItemData GetItem() => equippedItem;
@@ -65,6 +64,8 @@ public class EquipmentSlotUI : MonoBehaviour,
         icon.enabled = false;
     }
 
+    // ───────────── INPUT ─────────────
+
     public void OnPointerClick(PointerEventData eventData)
     {
         if (equippedItem == null) return;
@@ -75,7 +76,6 @@ public class EquipmentSlotUI : MonoBehaviour,
     public void OnPointerEnter(PointerEventData eventData)
     {
         if (equippedItem == null) return;
-
         ItemTooltipUI.Instance.Show(equippedItem);
     }
 
@@ -84,24 +84,31 @@ public class EquipmentSlotUI : MonoBehaviour,
         ItemTooltipUI.Instance.Hide();
     }
 
-    public void RefreshFromEquipment()
+    // ───────────── DRAG DROP ─────────────
+
+    public void OnDrop(PointerEventData eventData)
     {
-        if (EquipmentManager.Instance == null)
+        InventorySlotUI invSlot =
+            eventData.pointerDrag?.GetComponent<InventorySlotUI>();
+
+        if (invSlot == null) return;
+        if (invSlot.Item == null) return;
+
+        ItemData item = invSlot.Item;
+
+        if (item.type != acceptedType)
             return;
 
+        EquipmentManager.Instance.EquipFromInventory(item);
+    }
+
+    public void RefreshFromEquipment()
+    {
         ItemData item = EquipmentManager.Instance.GetEquipped(acceptedType);
 
         if (item != null)
-        {
-            equippedItem = item;
-            icon.sprite = item.icon;
-            icon.enabled = true;
-        }
+            Equip(item);
         else
-        {
-            equippedItem = null;
-            icon.sprite = null;
-            icon.enabled = false;
-        }
+            Clear();
     }
 }

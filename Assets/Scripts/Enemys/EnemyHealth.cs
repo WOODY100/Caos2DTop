@@ -3,15 +3,17 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : MonoBehaviour, IPoolable
 {
+    [SerializeField] private GameObject prefabSource;
+
     [Header("Health")]
     public int maxHealth = 30;
     private int currentHealth;
 
     [Header("Death")]
     public float corpseDuration = 60f;
-    public event Action OnEnemyDied;
+    public event Action<GameObject> OnEnemyDied;
 
     public bool IsDead { get; private set; }
 
@@ -62,7 +64,7 @@ public class EnemyHealth : MonoBehaviour
 
     void Die()
     {
-        OnEnemyDied?.Invoke();
+        OnEnemyDied?.Invoke(gameObject);
 
         GetComponent<EnemyWorldStateAction>()?.ExecuteOnDeath();
         GetComponent<EnemyWorldState>()?.MarkAsDead();
@@ -118,19 +120,58 @@ public class EnemyHealth : MonoBehaviour
 
         // ⏳ Cadáver
         StartCoroutine(CorpseRoutine());
-        
+        StartCoroutine(ReleaseAfterCorpse());
+
     }
 
+    private IEnumerator ReleaseAfterCorpse()
+    {
+        yield return new WaitForSeconds(corpseDuration);
+
+        EnemyPoolManager.Instance.ReleaseEnemy(gameObject, prefabSource);
+    }
 
     IEnumerator CorpseRoutine()
     {
         yield return new WaitForSeconds(corpseDuration);
-        Destroy(gameObject);
     }
 
     public void SetMaxHealth(int value)
     {
         maxHealth = value;
         currentHealth = maxHealth;
+    }
+
+    public void OnSpawned()
+    {
+        ResetEnemy();
+    }
+
+    private void ResetEnemy()
+    {
+        IsDead = false;
+        currentHealth = maxHealth;
+
+        animator.ResetToIdle();   // ← AQUÍ
+
+        controller.enabled = true;
+        controller.SetCanMove(true);
+
+        if (ai) ai.enabled = true;
+        if (attack) attack.enabled = true;
+
+        if (agent)
+        {
+            agent.enabled = true;
+            agent.ResetPath();
+        }
+
+        if (rb)
+        {
+            rb.simulated = true;
+            rb.linearVelocity = Vector2.zero;
+        }
+
+        levelUI?.Refresh();
     }
 }
