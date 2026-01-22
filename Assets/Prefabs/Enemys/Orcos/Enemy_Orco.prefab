@@ -12,6 +12,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: eea55f7fee47c624cb4a5825cc264e5b, type: 2}
+    - target: {fileID: 1587756195369720713, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
+      propertyPath: lootPrefab
+      value: 
+      objectReference: {fileID: 5221481940893104793, guid: 600ba29eb4adbd54196034c47fb8b0f5, type: 3}
     - target: {fileID: 1635322096941196967, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
       propertyPath: m_VertexColorAlwaysGammaSpace
       value: 1
@@ -81,16 +85,20 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 3459547899722000283, guid: fce3cf94bfe24eb49a26842c8bbd21da, type: 3}
     - target: {fileID: 7715139960590715710, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
+      propertyPath: m_SortingOrder
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7715139960590715710, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
       propertyPath: m_WasSpriteAssigned
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8919726183367754684, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.11498
+      value: -11.8299675
       objectReference: {fileID: 0}
     - target: {fileID: 8919726183367754684, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.2949861
+      value: 6.0925283
       objectReference: {fileID: 0}
     - target: {fileID: 8919726183367754684, guid: fd885370df1d7d64f8636c05672fc016, type: 3}
       propertyPath: m_LocalPosition.z

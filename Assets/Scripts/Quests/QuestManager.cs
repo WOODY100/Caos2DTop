@@ -42,6 +42,8 @@ public class QuestManager : MonoBehaviour, ISaveable
                 completedQuests.Add(quest.questID);
                 Debug.Log($"[QUEST COMPLETED] {quest.questName}");
                 anyCompleted = true;
+
+                WorldStateManager.Instance.SetFlag($"quest_completed_{quest.questID}");
             }
         }
         

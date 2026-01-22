@@ -16,11 +16,10 @@ public class MeleeEnemyAI : EnemyAIBase
         if (health != null && health.IsDead)
             return;
 
-        if (distance > attackDistance)
+        if (!attack.IsAttacking && distance > attackDistance)
         {
             ReleaseAttackSlot();
             ChangeState(State.Chase);
-            return;
         }
 
         controller.Stop();

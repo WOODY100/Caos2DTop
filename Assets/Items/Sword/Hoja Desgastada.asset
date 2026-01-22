@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05cfc5bb505c85b46b8f38c85c4440fe, type: 3}
+  m_Name: Hoja Desgastada
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: Hoja Desgastada
+  icon: {fileID: -1969604365588018199, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
+  type: 8
+  description: "Una espada vieja y mellada.\nApenas mantiene el filo, pero sigue
+    siendo mejor que pelear con las manos vac\xEDas."
+  stackable: 0
+  maxStack: 99
+  bonusHealth: 0
+  bonusAttack: 1
+  bonusDefense: 0
+  bonusSpeed: 0
+  itemID: sword_rusty_01

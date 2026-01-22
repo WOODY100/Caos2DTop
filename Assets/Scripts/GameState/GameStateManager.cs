@@ -41,20 +41,33 @@ public class GameStateManager : MonoBehaviour
     {
         switch (state)
         {
+            // 🎮 Gameplay normal
             case GameState.Playing:
                 Time.timeScale = 1f;
                 EnableGameplay(true);
                 break;
 
+            // ⏸️ PAUSA REAL (ÚNICA)
             case GameState.Paused:
+                Time.timeScale = 0f;
+                EnableGameplay(false);
+                break;
+
+            // 📦 OVERLAYS (NO PAUSAN EL MUNDO)
             case GameState.Inventory:
             case GameState.Loot:
+                Time.timeScale = 1f;          // 🔥 NO pausar
+                //EnableGameplay(false);        // solo bloquea input
+                break;
+
+            // 🧠 Estados de decisión (pausan, pero controlados)
             case GameState.LevelUp:
             case GameState.Dialogue:
                 Time.timeScale = 0f;
                 EnableGameplay(false);
                 break;
 
+            // 🔁 Estados especiales
             case GameState.Transition:
             case GameState.Menu:
             case GameState.GameOver:
@@ -63,6 +76,7 @@ public class GameStateManager : MonoBehaviour
                 break;
         }
     }
+
 
     private void EnableGameplay(bool enabled)
     {

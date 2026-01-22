@@ -91,17 +91,13 @@ public class HotbarManager : MonoBehaviour, ISaveable
 
     public void TryUseSlot(int index)
     {
-        Debug.Log($"[HOTBAR] TryUseSlot({index})");
-
         if (!EnsureSlots())
         {
-            Debug.Log("[HOTBAR] No hay slots");
             return;
         }
 
         if (index < 0 || index >= slots.Length)
         {
-            Debug.Log("[HOTBAR] Index fuera de rango");
             return;
         }
 
@@ -109,20 +105,24 @@ public class HotbarManager : MonoBehaviour, ISaveable
 
         if (slot.Item == null)
         {
-            Debug.Log("[HOTBAR] Slot vacío");
             return;
         }
-
-        Debug.Log("[HOTBAR] Item en slot: " + slot.Item.name);
 
         if (slot.Item is not IUsableItem usable)
         {
-            Debug.Log("[HOTBAR] Item NO implementa IUsableItem");
             return;
         }
 
-        bool used = usable.Use();
-        Debug.Log("[HOTBAR] Use() devolvió: " + used);
+        PlayerStats player = PlayerStatsProvider.Get();
+        if (player == null)
+        {
+            return;
+        }
+
+        if (!usable.CanUse(player))
+            return;
+
+        bool used = usable.Use(player);
 
         if (used)
         {

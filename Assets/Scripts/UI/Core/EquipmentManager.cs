@@ -237,10 +237,10 @@ public class EquipmentManager : MonoBehaviour, ISaveable
         slot.Equip(item);
     }
 
-    public void ClearUISlots()
-    {
-        slots.Clear();
-    }
+    //public void ClearUISlots()
+    //{
+        //slots.Clear();
+    //}
     
     public void RefreshUIFromEquipped()
     {
@@ -255,4 +255,17 @@ public class EquipmentManager : MonoBehaviour, ISaveable
             slot.Equip(pair.Value);
         }
     }
+
+    public void ResetInteractionState()
+    {
+        // No tocar 'slots'
+        // No tocar 'equipped'
+
+        foreach (var slot in slots.Values)
+        {
+            if (slot == null) continue;
+            slot.RefreshFromEquipment();
+        }
+    }
+
 }

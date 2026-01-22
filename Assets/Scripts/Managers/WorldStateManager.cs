@@ -2,9 +2,11 @@
 using UnityEngine;
 using System;
 
+
 public class WorldStateManager : MonoBehaviour, ISaveable
 {
     public static event Action OnWorldStateChanged;
+    public static event Action<string> OnFlagSet;
     public static WorldStateManager Instance;
 
     // ======================
@@ -79,6 +81,7 @@ public class WorldStateManager : MonoBehaviour, ISaveable
         if (worldFlags.Add(flagID))
         {
             OnWorldStateChanged?.Invoke();
+            OnFlagSet?.Invoke(flagID);
         }
     }
 
@@ -131,5 +134,11 @@ public class WorldStateManager : MonoBehaviour, ISaveable
         if (data.worldFlags != null)
             foreach (var flag in data.worldFlags)
                 worldFlags.Add(flag);
+
+        OnWorldStateChanged?.Invoke();
     }
+
+    #if UNITY_EDITOR
+        public IEnumerable<string> GetAllFlags() => worldFlags;
+    #endif
 }

@@ -18,6 +18,32 @@ public class InventorySlotUI : MonoBehaviour,
 
     private ItemData item;
     public ItemData Item => item;
+    
+    [SerializeField] private Image cooldownOverlay;
+
+    private void Awake()
+    {
+        if (cooldownOverlay != null)
+            cooldownOverlay.fillAmount = 0f;
+    }
+
+    private void Update()
+    {
+        if (item == null || cooldownOverlay == null)
+            return;
+
+        if (!ItemCooldownManager.Instance)
+            return;
+
+        float remaining =
+            ItemCooldownManager.Instance.GetRemaining(item);
+        float total =
+            ItemCooldownManager.Instance.GetTotal(item);
+
+        cooldownOverlay.fillAmount =
+            total > 0 ? remaining / total : 0f;
+    }
+
 
     // ─────────────────────────────
     // SETUP
@@ -72,10 +98,18 @@ public class InventorySlotUI : MonoBehaviour,
         // Consumible
         if (item is IUsableItem usable)
         {
-            bool used = usable.Use();
-            if (used)
+            PlayerStats player = PlayerStatsProvider.Get();
+            if (player == null)
             {
-                InventoryManager.Instance.RemoveItem(item, 1);
+                Debug.LogWarning("[INVENTORY] PlayerStats no encontrado");
+                return;
+            }
+
+            if (usable.CanUse(player))
+            {
+                bool used = usable.Use(player);
+                if (used)
+                    InventoryManager.Instance.RemoveItem(item, 1);
             }
 
             ItemTooltipUI.Instance?.Hide();

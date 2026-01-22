@@ -11,6 +11,9 @@ public class SaveData
     public Vector3 playerPosition;
     public List<string> worldFlags = new();
 
+    // INTRO / NARRATIVE
+    public bool introSeen;
+
     // PLAYER
     public int playerLevel;
     public int playerCurrentExp;

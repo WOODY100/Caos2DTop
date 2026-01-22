@@ -50,7 +50,7 @@ public class InventoryHUD : MonoBehaviour
         if (isOpen) return;
 
         if (UIModalManager.Instance != null &&
-        !UIModalManager.Instance.RequestOpen(this))
+            !UIModalManager.Instance.RequestOpen(this))
             return;
 
         GameStateManager.Instance.SetState(GameState.Inventory);
@@ -59,6 +59,19 @@ public class InventoryHUD : MonoBehaviour
         gameObject.SetActive(true);
 
         EquipmentManager.Instance?.RefreshUIFromEquipped();
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            var controller = player.GetComponent<PlayerController>();
+            if (controller != null)
+                controller.SetInputEnabled(true);
+                controller.ForceCancelMovement();
+        }
+
+        // 🔑 Resetear estado de interacción del equipo
+        EquipmentManager.Instance?.ResetInteractionState();
+
     }
 
     public void Close()
@@ -66,16 +79,24 @@ public class InventoryHUD : MonoBehaviour
         if (!isOpen) return;
 
         ItemTooltipUI.Instance?.Hide();
-        GameStateManager.Instance.SetState(GameState.Playing);
 
         isOpen = false;
         gameObject.SetActive(false);
 
-        // 🔥 AVISAR AL EQUIPMENT MANAGER
-        EquipmentManager.Instance?.ClearUISlots();
+        //EquipmentManager.Instance?.ClearUISlots();
 
         if (UIModalManager.Instance != null)
             UIModalManager.Instance.Close(this);
+
+        GameStateManager.Instance.SetState(GameState.Playing);
+
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            var controller = player.GetComponent<PlayerController>();
+            if (controller != null)
+                controller.SetInputEnabled(true);
+        }
     }
 
     public void Toggle()

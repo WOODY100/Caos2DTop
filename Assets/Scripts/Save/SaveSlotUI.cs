@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class SaveSlotUI : MonoBehaviour
 {
@@ -81,7 +82,8 @@ public class SaveSlotUI : MonoBehaviour
             "¿Crear una nueva partida en este slot?",
             () =>
             {
-                SaveManager.Instance.CreateNewGame(slotIndex);
+                SaveManager.Instance.CreateNewGameData(slotIndex);
+                SceneManager.LoadScene("Intro_Scroll");
             }
         );
     }

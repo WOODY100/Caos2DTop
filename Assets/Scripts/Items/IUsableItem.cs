@@ -1,4 +1,6 @@
 public interface IUsableItem
 {
-    bool Use();
+    float CooldownDuration { get; }
+    bool CanUse(PlayerStats target);
+    bool Use(PlayerStats target);
 }

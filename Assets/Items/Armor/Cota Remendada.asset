@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05cfc5bb505c85b46b8f38c85c4440fe, type: 3}
+  m_Name: Cota Remendada
+  m_EditorClassIdentifier: Assembly-CSharp::ItemData
+  itemName: Cota Remendada
+  icon: {fileID: -6304352694763859648, guid: ac2fe57ceca8f0749af225eba42a58dc, type: 3}
+  type: 5
+  description: "Placas de metal y cuero cosidas sin elegancia.\nNo es bonita, pero
+    resiste m\xE1s de lo que parece."
+  stackable: 0
+  maxStack: 99
+  bonusHealth: 4
+  bonusAttack: 0
+  bonusDefense: 2
+  bonusSpeed: 0
+  itemID: armor_patchwork_01

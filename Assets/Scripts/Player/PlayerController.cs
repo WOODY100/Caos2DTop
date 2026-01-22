@@ -83,7 +83,20 @@ public class PlayerController : MonoBehaviour
 
     private void OnMoveCanceled(InputAction.CallbackContext ctx)
     {
+        CancelMovement();
+    }
+
+    private void CancelMovement()
+    {
         moveInput = Vector2.zero;
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+    }
+
+    public void ForceCancelMovement()
+    {
+        CancelMovement();
     }
 
     void Update()

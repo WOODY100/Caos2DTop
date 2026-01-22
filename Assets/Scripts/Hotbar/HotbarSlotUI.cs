@@ -22,6 +22,22 @@ public class HotbarSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
         HotbarManager.Instance?.NotifySlotsUIReady();
     }
 
+    private void Update()
+    {
+        if (item == null || cooldownOverlay == null)
+            return;
+
+        if (!ItemCooldownManager.Instance)
+            return;
+
+        float remaining =
+            ItemCooldownManager.Instance.GetRemaining(item);
+        float total =
+            ItemCooldownManager.Instance.GetTotal(item);
+
+        UpdateCooldown(remaining, total);
+    }
+
     public void SetItem(ItemData newItem, int amount)
     {
         item = newItem;
@@ -44,6 +60,9 @@ public class HotbarSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
             amountText.text = amount > 1 ? amount.ToString() : "";
             amountText.gameObject.SetActive(amount > 1);
         }
+
+        // ✅ Mostrar tecla SOLO si hay item
+        SetKeyTextVisible(true);
     }
 
     public void Clear()
@@ -67,6 +86,9 @@ public class HotbarSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
         {
             cooldownOverlay.fillAmount = 0f;
         }
+
+        // ❌ Ocultar tecla cuando no hay item
+        SetKeyTextVisible(false);
     }
 
     public void SafeClear()
@@ -119,5 +141,14 @@ public class HotbarSlotUI : MonoBehaviour, IDropHandler, IPointerClickHandler
             return;
 
         HotbarManager.Instance.TryUseSlot(slotIndex);
+    }
+
+    void SetKeyTextVisible(bool visible)
+    {
+        if (!keyText) return;
+
+        Color c = keyText.color;
+        c.a = visible ? 1f : 0f;
+        keyText.color = c;
     }
 }

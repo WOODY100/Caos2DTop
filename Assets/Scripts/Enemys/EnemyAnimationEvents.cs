@@ -31,9 +31,14 @@ public class EnemyAnimationEvents : MonoBehaviour
 
     public void Anim_AttackEnd()
     {
-        if (enemyAttack == null) return;
+        if (enemyAttack == null)
+        {
+            Debug.LogWarning("AttackEnd sin EnemyAttack", this);
+            return;
+        }
         enemyAttack.Anim_AttackEnd();
     }
+
 
     // =====================
     // 💀 DEATH EVENT

@@ -1,35 +1,41 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "Items/Consumables/Regen Potion")]
+[CreateAssetMenu(menuName = "Inventory/Items/Regen Potion")]
 public class RegenPotionItem : ItemData, IUsableItem
 {
     [Header("Regeneration")]
     public int totalHeal = 50;
     public float duration = 5f;
 
-    public bool Use()
-    {
-        PlayerStats stats = PlayerStatsProvider.Get();
-        if (stats == null) return false;
+    [Header("Cooldown")]
+    public float cooldown = 8f;
 
-        if (stats.IsHealthFull())
+    // ✅ IMPLEMENTACIÓN OBLIGATORIA
+    public float CooldownDuration => cooldown;
+
+    public bool CanUse(PlayerStats target)
+    {
+        if (target == null)
             return false;
 
-        PotionCooldownManager cooldown =
-            stats.GetComponent<PotionCooldownManager>();
+        if (target.IsHealthFull())
+            return false;
 
-        if (cooldown != null && !cooldown.CanUsePotion())
+        return !ItemCooldownManager.Instance.IsOnCooldown(this);
+    }
+
+    public bool Use(PlayerStats target)
+    {
+        if (!CanUse(target))
             return false;
 
         HealthRegenEffect regen =
-            stats.GetComponent<HealthRegenEffect>();
-
-        if (regen == null)
-            regen = stats.gameObject.AddComponent<HealthRegenEffect>();
+            target.GetComponent<HealthRegenEffect>() ??
+            target.gameObject.AddComponent<HealthRegenEffect>();
 
         regen.StartRegen(totalHeal, duration);
 
-        cooldown?.RegisterUse();
+        ItemCooldownManager.Instance.StartCooldown(this);
         return true;
     }
 }

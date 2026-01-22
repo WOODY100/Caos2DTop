@@ -6,9 +6,11 @@ public class DialogueUI : MonoBehaviour
 {
     public static DialogueUI Instance;
 
+    private NPCActionExecutor currentExecutor;
+
     [Header("UI")]
     [SerializeField] private GameObject root;
-    [SerializeField] private TMP_Text speakerNameText; // 🔹 NUEVO
+    [SerializeField] private TMP_Text speakerNameText;
     [SerializeField] private TMP_Text dialogueText;
 
     private DialogueLine[] currentLines;
@@ -39,7 +41,7 @@ public class DialogueUI : MonoBehaviour
         }
     }
 
-    public void Show(string speakerName, DialogueLine[] lines)
+    public void Show(string speakerName, DialogueLine[] lines, NPCActionExecutor executor)
     {
         if (lines == null || lines.Length == 0)
             return;
@@ -48,6 +50,7 @@ public class DialogueUI : MonoBehaviour
         speakerNameText.gameObject.SetActive(!string.IsNullOrEmpty(speakerName));
 
         currentLines = lines;
+        currentExecutor = executor;
         currentIndex = 0;
 
         ShowLine();
@@ -65,6 +68,31 @@ public class DialogueUI : MonoBehaviour
         if (!string.IsNullOrEmpty(line.flagOnShow))
         {
             WorldStateManager.Instance.SetFlag(line.flagOnShow);
+        }
+
+        if (line.giveItem && currentExecutor != null)
+        {
+            GiveItemFromLine(line);
+        }
+    }
+
+    private void GiveItemFromLine(DialogueLine line)
+    {
+        ItemData item = ItemDatabase.Instance.GetItem(line.itemID);
+
+        if (item == null)
+        {
+            Debug.LogError($"Item NO encontrado: {line.itemID}");
+            return;
+        }
+
+        if (!string.IsNullOrEmpty(line.giveOnceFlag))
+        {
+            currentExecutor.GiveItemOnce(item, line.amount, line.giveOnceFlag);
+        }
+        else
+        {
+            currentExecutor.GiveItem(item, line.amount);
         }
     }
 

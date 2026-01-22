@@ -8,6 +8,12 @@ public class DialogueLine
 
     [Header("Optional WorldState")]
     public string flagOnShow;
+
+    [Header("Optional Give Item")]
+    public bool giveItem;
+    public string itemID;
+    public int amount = 1;
+    public string giveOnceFlag;
 }
 
 public class NPCDialogue : MonoBehaviour
@@ -27,8 +33,12 @@ public class NPCDialogue : MonoBehaviour
         {
             if (string.IsNullOrEmpty(entry.requiredFlag) ||
                 WorldStateManager.Instance.HasFlag(entry.requiredFlag))
-            {
-                DialogueUI.Instance.Show(speakerName, entry.lines);
+                {
+                    DialogueUI.Instance.Show(
+                        speakerName,
+                        entry.lines,
+                        GetComponent<NPCActionExecutor>()
+                    );
                 return;
             }
         }

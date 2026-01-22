@@ -184,6 +184,12 @@ public class SaveManager : MonoBehaviour
             sceneName = SceneManager.GetActiveScene().name
         };
 
+        var player = FindFirstObjectByType<PlayerController>();
+        if (player != null)
+        {
+            data.playerPosition = player.transform.position;
+        }
+
         foreach (var saveable in FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None))
         {
             if (saveable is ISaveable s)
@@ -272,24 +278,23 @@ public class SaveManager : MonoBehaviour
         LoadGame(latestSlot);
     }
 
-    public void CreateNewGame(int slot)
+    public void CreateNewGameData(int slot)
     {
         CurrentSlot = slot;
 
-        // Crear un SaveData LIMPIO (estado inicial)
         SaveData data = new SaveData
         {
             saveVersion = CURRENT_SAVE_VERSION,
 
             sceneName = "World",
-            playerPosition = Vector3.zero,
+            playerPosition = new Vector3(-50.17f, -9.36f, 0f),
 
-            // 🔹 NIVEL
+            introSeen = false,
+
             playerLevel = 1,
             playerCurrentExp = 0,
             playerExpToNextLevel = 100,
 
-            // 🔹 BASE STATS INICIALES (CLAVE)
             baseHealth = 100,
             baseAttack = 10,
             baseDefense = 5,
@@ -299,6 +304,11 @@ public class SaveManager : MonoBehaviour
             inventoryItems = new(),
             equippedItems = new(),
             coins = 0,
+
+            worldFlags = new List<string>
+        {
+            "tutorial_started"
+        },
 
             meta = new SaveMetaData
             {
@@ -311,12 +321,8 @@ public class SaveManager : MonoBehaviour
 
         string json = JsonUtility.ToJson(data, true);
         File.WriteAllText(GetSavePath(slot), json);
-        SpawnManager.Instance?.SetSpawn("start");
 
-        LoadGame(slot);
-        
-        PlayerStats stats = FindFirstObjectByType<PlayerStats>();
-        stats?.InitializeNewGame();
+        SpawnManager.Instance?.SetSpawn("start");
     }
 
     public void SaveCurrentGame()
@@ -353,4 +359,32 @@ public class SaveManager : MonoBehaviour
         // if (data.saveVersion == 1) { ... data.saveVersion = 2; }
     }
 
+    public bool HasSeenIntro(int slot)
+    {
+        string path = GetSavePath(slot);
+
+        if (!File.Exists(path))
+            return false;
+
+        string json = File.ReadAllText(path);
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        return data.introSeen;
+    }
+
+    public void MarkIntroSeen(int slot)
+    {
+        string path = GetSavePath(slot);
+
+        if (!File.Exists(path))
+            return;
+
+        string json = File.ReadAllText(path);
+        SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+        data.introSeen = true;
+
+        string updatedJson = JsonUtility.ToJson(data, true);
+        File.WriteAllText(path, updatedJson);
+    }
 }

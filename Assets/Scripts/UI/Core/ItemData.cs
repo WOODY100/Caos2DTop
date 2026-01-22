@@ -17,7 +17,7 @@ public enum ItemType
     Ring
 }
 
-[CreateAssetMenu(menuName = "Inventory/Item")]
+[CreateAssetMenu(menuName = "Inventory/Items/Item")]
 public class ItemData : ScriptableObject
 {
     public string itemName;

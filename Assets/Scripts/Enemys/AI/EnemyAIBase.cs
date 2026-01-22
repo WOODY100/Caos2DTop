@@ -224,6 +224,9 @@ public abstract class EnemyAIBase : MonoBehaviour
     {
         Vector3 desired = agent.desiredVelocity;
 
+        if (currentState == State.Attack)
+            return;
+
         if (desired.magnitude > moveThreshold && controller.CanMove)
         {
             idleTimer = 0f;
