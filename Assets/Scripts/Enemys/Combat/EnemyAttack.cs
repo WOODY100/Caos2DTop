@@ -6,6 +6,7 @@ public class EnemyAttack : MonoBehaviour
     public float attackCooldown = 1.2f;
     public bool IsAttacking => isAttacking;
     private float attackTimer;
+    private EnemyAIBase enemyAI;
     [SerializeField] private AttackState currentState = AttackState.Idle;
 
     [Header("Attack FSM Timers")]
@@ -44,6 +45,7 @@ public class EnemyAttack : MonoBehaviour
         enemyAnimator = GetComponent<EnemyAnimator>();
         enemyController = GetComponent<EnemyController>();
         enemyLevel = GetComponent<EnemyLevel>();
+        enemyAI = GetComponentInParent<EnemyAIBase>();
 
         DisableAllHitboxes();
     }
@@ -100,16 +102,26 @@ public class EnemyAttack : MonoBehaviour
     {
         DisableAllHitboxes();
 
-        Vector2 dir = enemyController.GetMoveDirection();
-        if (dir == Vector2.zero)
-            dir = Vector2.down;
+        switch (enemyController.Facing)
+        {
+            case EnemyController.FacingDirection.Up:
+                currentHitbox = hitboxUp;
+                break;
 
-        if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
-            currentHitbox = dir.x > 0 ? hitboxRight : hitboxLeft;
-        else
-            currentHitbox = dir.y > 0 ? hitboxUp : hitboxDown;
+            case EnemyController.FacingDirection.Down:
+                currentHitbox = hitboxDown;
+                break;
+
+            case EnemyController.FacingDirection.Left:
+                currentHitbox = hitboxLeft;
+                break;
+
+            case EnemyController.FacingDirection.Right:
+                currentHitbox = hitboxRight;
+                break;
+        }
     }
-    
+
     void ForceEndAttack()
     {
         isAttacking = false;
@@ -154,6 +166,7 @@ public class EnemyAttack : MonoBehaviour
 
         enemyController.SetCanMove(false);
         enemyController.Stop();
+        enemyController.LockFacing();
 
         SelectHitbox();
         enemyAnimator.PlayAttack();
@@ -161,9 +174,15 @@ public class EnemyAttack : MonoBehaviour
 
     void EnterHit()
     {
+        // 🔴 Cancelar ataque si el target ya no es válido
+        if (!CanAttackTarget())
+        {
+            CancelAttack();
+            return;
+        }
+
         currentState = AttackState.Hit;
         stateTimer = hitTime;
-
         currentHitbox?.SetActive(true);
     }
 
@@ -190,6 +209,37 @@ public class EnemyAttack : MonoBehaviour
         canAttack = true;
 
         DisableAllHitboxes();
+        enemyController.SetCanMove(true);
+        enemyController.UnlockFacing();
+
+        // 🔥 CLAVE ABSOLUTA
+        enemyAI?.OnAttackFinished();
     }
 
+    private bool CanAttackTarget()
+    {
+        if (enemyAI == null)
+            return true;
+
+        float distance = Vector2.Distance(
+            transform.position,
+            enemyAI.Player.position
+        );
+
+        return distance <= enemyAI.attackDistance;
+    }
+
+    void CancelAttack()
+    {
+        currentState = AttackState.Idle;
+        isAttacking = false;
+        canAttack = true;
+
+        DisableAllHitboxes();
+        enemyController.SetCanMove(true);
+        enemyController.UnlockFacing();
+
+        // 🔔 AVISAR A LA IA (MISMO QUE FIN NORMAL)
+        enemyAI?.OnAttackFinished();
+    }
 }

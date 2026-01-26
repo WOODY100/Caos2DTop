@@ -10,7 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8377542060709676590}
   - component: {fileID: 4621264727298969146}
-  - component: {fileID: 2273527951499565961}
+  - component: {fileID: 3665456176022340241}
+  - component: {fileID: 6829942121711301845}
   m_Layer: 0
   m_Name: Trees_4
   m_TagString: Untagged
@@ -91,8 +92,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &2273527951499565961
-CircleCollider2D:
+--- !u!61 &3665456176022340241
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -125,5 +126,31 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.018195122, y: 0.14040041}
-  m_Radius: 0.17325592
+  m_Offset: {x: -0.004945338, y: 0.080830365}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.55601805, y: 0.103500366}
+    oldSize: {x: 0.625, y: 1.25}
+    newSize: {x: 1, y: 1.4375}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 0.21389341, y: 0.41839397}
+  m_EdgeRadius: 0
+--- !u!114 &6829942121711301845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2930261884344275652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9809bf1345abc5648af68b3a82653f08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NavMeshPlus::NavMeshPlus.Components.NavMeshModifier
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff

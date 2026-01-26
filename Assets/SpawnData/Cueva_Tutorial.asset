@@ -13,22 +13,22 @@ MonoBehaviour:
   m_Name: Cueva_Tutorial
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnData
   enemies:
+  - enemyPrefab: {fileID: 8011955585721377958, guid: ba0dcf2721b19234b8c898f4f8ee0398, type: 3}
+    weight: 40
+    minPlayerLevel: 1
+    maxPlayerLevel: 4
+    isBoss: 0
   - enemyPrefab: {fileID: 7618297230212364701, guid: f18705a997506c14a9e00e8d854f0a3f, type: 3}
-    weight: 100
+    weight: 40
     minPlayerLevel: 1
-    maxPlayerLevel: 10
+    maxPlayerLevel: 4
     isBoss: 0
-  - enemyPrefab: {fileID: 6020681092004873129, guid: cb223e46e2fa02e478f61e2e686ee9a2, type: 3}
-    weight: 100
-    minPlayerLevel: 1
-    maxPlayerLevel: 10
-    isBoss: 0
-  - enemyPrefab: {fileID: 6230609573136086897, guid: c8cdd9597c80dec4895f58240d956f12, type: 3}
-    weight: 100
-    minPlayerLevel: 1
-    maxPlayerLevel: 10
+  - enemyPrefab: {fileID: 7393773317778153481, guid: 637bc1e5a72dd03499658a415141d44e, type: 3}
+    weight: 20
+    minPlayerLevel: 2
+    maxPlayerLevel: 4
     isBoss: 0
   minEnemies: 2
-  maxEnemies: 5
-  respawnDelay: 10
+  maxEnemies: 3
+  respawnDelay: 0
   bossSpawnChance: 5

@@ -77,7 +77,7 @@ public class LevelUpManager : MonoBehaviour
         },
         new LevelUpOption
         {
-            title = "Ataque +2",
+            title = "Ataque +1.5",
             description = "Aumenta el daño",
             attack = 2
         },

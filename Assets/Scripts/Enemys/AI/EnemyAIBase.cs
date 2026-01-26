@@ -18,9 +18,11 @@ public abstract class EnemyAIBase : MonoBehaviour
     protected PlayerAttackSlots attackSlots;
     protected bool hasAttackSlot;
     protected EnemyLevel enemyLevel;
+    protected bool forcedReturning;
 
     [Header("Target")]
     [SerializeField] protected Transform player;
+    public Transform Player => player;
 
     [Header("Separation")]
     public float separationRadius = 0.6f;
@@ -31,6 +33,9 @@ public abstract class EnemyAIBase : MonoBehaviour
     public float detectionDistance = 4f;
     public float chaseDistance = 7f;
     public float attackDistance = 1.1f;
+
+    [Header("Leash / Reset")]
+    [SerializeField] protected bool blockReengageWhileReturning = false;
 
     [Header("Idle")]
     [SerializeField] private float moveThreshold = 0.05f;
@@ -61,9 +66,10 @@ public abstract class EnemyAIBase : MonoBehaviour
 
         agent.obstacleAvoidanceType = ObstacleAvoidanceType.LowQualityObstacleAvoidance;
         agent.avoidancePriority = Random.Range(30, 60);
+
+        agent.updatePosition = false;
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-        agent.updateRotation = false;
 
 
         originPosition = transform.position;
@@ -133,7 +139,33 @@ public abstract class EnemyAIBase : MonoBehaviour
     {
         if (currentState == newState) return;
 
+        State previousState = currentState;
         currentState = newState;
+
+        // ─────────────────────────────
+        // COMBAT LOCK INTEGRATION
+        // ─────────────────────────────
+
+        bool wasHostile =
+            previousState == State.Chase ||
+            previousState == State.Attack;
+
+        bool isHostile =
+            newState == State.Chase ||
+            newState == State.Attack;
+
+        if (!wasHostile && isHostile)
+        {
+            CombatLockManager.Instance?.RegisterHostileEnemy();
+        }
+        else if (wasHostile && !isHostile)
+        {
+            CombatLockManager.Instance?.UnregisterHostileEnemy();
+        }
+
+        // ─────────────────────────────
+        // IDLE RESET
+        // ─────────────────────────────
 
         if (newState == State.Idle)
             idleTimer = idleTime;
@@ -206,6 +238,7 @@ public abstract class EnemyAIBase : MonoBehaviour
 
         if (Vector2.Distance(transform.position, originPosition) < 0.3f)
         {
+            forcedReturning = false;
             ChangeState(State.Idle);
         }
     }
@@ -245,7 +278,11 @@ public abstract class EnemyAIBase : MonoBehaviour
 
     protected bool PlayerDetected()
     {
+        if (forcedReturning && blockReengageWhileReturning)
+            return false;
+
         if (!player) return false;
+
         return Vector2.Distance(transform.position, player.position) <= detectionDistance;
     }
 
@@ -278,5 +315,49 @@ public abstract class EnemyAIBase : MonoBehaviour
             tangent * Mathf.Sin(Time.time * 2f);
 
         agent.SetDestination(targetPos);
+    }
+
+    public void OnAttackFinished()
+    {
+        if (health != null && health.IsDead)
+            return;
+
+        if (player != null)
+        {
+            Vector2 toPlayer = player.position - transform.position;
+            controller.SetFacingFromVector(toPlayer);
+        }   // 🔥 CLAVE
+        ChangeState(State.Chase);
+    }
+
+    protected void UpdateFacingToPlayer()
+    {
+        if (player == null) return;
+
+        Vector2 toPlayer = player.position - transform.position;
+
+        controller.SetFacingFromVector(toPlayer);
+    }
+
+    public virtual void ForceHardReset()
+    {
+        // 🔴 Si está muerto, no hacer nada
+        if (health == null || health.IsDead)
+            return;
+
+        // 1️⃣ Liberar slot de ataque
+        ReleaseAttackSlot();
+
+        // 2️⃣ Limpiar movimiento
+        agent.ResetPath();
+        agent.velocity = Vector3.zero;
+
+        // 3️⃣ Resetear SOLO la vida (sin muerte)
+        health.ResetHealthOnly();
+
+        // 4️⃣ Volver al origen
+        if (blockReengageWhileReturning)
+            forcedReturning = true;
+        ChangeState(State.Return);
     }
 }

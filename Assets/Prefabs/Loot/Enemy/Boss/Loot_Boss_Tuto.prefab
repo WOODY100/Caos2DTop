@@ -68,8 +68,8 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 0.6
+  m_Offset: {x: 0, y: 0.0032641888}
+  m_Radius: 0.84481287
 --- !u!114 &5221481940893104793
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,9 +82,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c840f6c6d1591d4b8b1aeca6883ac5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LootContainer
-  loot:
+  lootTable:
   - item: {fileID: 11400000, guid: 05d4d99b75704fa47b0d030e83ddc9eb, type: 2}
-    amount: 1
+    minAmount: 1
+    maxAmount: 1
+    dropChance: 100
+    guaranteed: 1
+    amount: 0
+  - item: {fileID: 11400000, guid: 37cd180aa71e07f40b6eaf23fafafca3, type: 2}
+    minAmount: 1
+    maxAmount: 1
+    dropChance: 100
+    guaranteed: 1
+    amount: 0
   triggerCollider: {fileID: 4643535110956991053}
   visualRoot: {fileID: 7602143835890367965}
 --- !u!1 &7602143835890367965
