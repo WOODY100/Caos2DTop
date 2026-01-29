@@ -28,11 +28,11 @@ public class InteractInput : MonoBehaviour
         if (!ctx.performed)
             return;
 
-        if (GameStateManager.Instance != null &&
+        /*if (GameStateManager.Instance != null &&
             !GameStateManager.Instance.IsGameplayAllowed())
-            return;
+            return;*/
 
-        //Debug.Log("[INPUT] Interact (E)");
+        Debug.Log("[INPUT] Interact (E)");
 
         interactor.OnInteract();
     }

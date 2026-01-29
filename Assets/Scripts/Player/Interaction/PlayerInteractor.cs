@@ -28,10 +28,14 @@ public class PlayerInteractor : MonoBehaviour
     private void TryInteract()
     {
         if (currentInteractable == null)
+        {
+            Debug.Log("No hay interactable");
             return;
+        }
 
-        // 🔒 Blindaje: el objeto pudo haber sido destruido
         MonoBehaviour mb = currentInteractable as MonoBehaviour;
+        Debug.Log("Interactable activo: " + mb.isActiveAndEnabled);
+
         if (mb == null || !mb.isActiveAndEnabled)
         {
             currentInteractable = null;

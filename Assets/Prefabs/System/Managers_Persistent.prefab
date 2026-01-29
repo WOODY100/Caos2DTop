@@ -1,5 +1,49 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &514951979780900419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 46374693221691904}
+  - component: {fileID: 23265817096502772}
+  m_Layer: 0
+  m_Name: InkManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &46374693221691904
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514951979780900419}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 254467089871149559}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &23265817096502772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514951979780900419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43103a9e4bc0f8b49a48eac9aafa5e9f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InkManager
 --- !u!1 &759426708533683718
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,6 +160,7 @@ MonoBehaviour:
   - boss_room_entered
   - zone_entered
   autosaveCooldown: 30
+  blockDuringCombat: 1
 --- !u!1 &1152223291483264283
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,6 +304,7 @@ Transform:
   - {fileID: 7851315682821502116}
   - {fileID: 3472498471947520296}
   - {fileID: 3796045587477795197}
+  - {fileID: 46374693221691904}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2842541117372919786
@@ -318,6 +364,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CombatLockManager
   combatCooldown: 10
+  combatTimer: 0
 --- !u!1 &2433365140335608148
 GameObject:
   m_ObjectHideFlags: 0

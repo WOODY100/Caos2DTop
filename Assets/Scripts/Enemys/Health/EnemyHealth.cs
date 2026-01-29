@@ -221,5 +221,4 @@ public class EnemyHealth : MonoBehaviour, IPoolable
         // Animación: volver a idle limpio
         animator.ResetToIdle();
     }
-
 }

@@ -12,9 +12,12 @@ public class PlayerInteractDetector : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        Debug.Log("Trigger con: " + other.name);
+
         IInteractable interactable = other.GetComponentInParent<IInteractable>();
         if (interactable != null)
         {
+            Debug.Log("Encontré IInteractable en padre");
             interactor.SetInteractable(interactable);
         }
     }
